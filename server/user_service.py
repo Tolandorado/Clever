@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 
+
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Users.db" # Я использую sqlite для теста
 db = SQLAlchemy(app)
@@ -87,6 +88,7 @@ def get_user_by_id(user_id):
             "password": user.password if user is not None else None
         })
 
+# Удаляет пользователя с подходящим id из базы данных
 @app.route("/users/api/delete/<string:user_id>", methods=["DELETE",])
 def delete_user(user_id):
     user_id = int(user_id, 16)
@@ -105,6 +107,9 @@ def delete_user(user_id):
             "responce-suc": True
         })
 
+
+# Ищёт в бд пользователя с указанных именем и проверяет пароль на соответствие.
+# В случае отстутствия пользователя с таким именем, или несоотвествия пароля в correct будет выведено False
 @app.route("/users/api/verify", methods=["GET", "POST"])
 def verify_user():
     if request.method == "GET":
@@ -124,7 +129,8 @@ def verify_user():
     else:
         return jsonify({
             "responce-suc": True,
-            "correct": False if user is None or user.password != password else True
+            "correct": False if user is None or user.password != password else True,
+            "id": user.id if user is not None and user.password == password else None
         })
 
 if __name__ == "__main__":
