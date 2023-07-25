@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Users.db" # Я использую sqlite для теста
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://klever:1@192.168.1.72:5432/users" # Я использую sqlite для теста
 db = SQLAlchemy(app)
 
 class User(db.Model):
@@ -134,4 +134,4 @@ def verify_user():
         })
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run("0.0.0.0", 5000, debug=True)
