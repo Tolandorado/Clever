@@ -1,18 +1,23 @@
 import './App.css';
 import { RoutesMain } from './components/Routes/routes';
 import { Wrapper } from './components/Wrapper/wrapper';
-import { createContext } from 'react';
+import { useState } from 'react';
+import { AuthContext, AuthProvider } from './AuthContext';
 
-function App() {
+const App = () => {
+
+
+
   return (
-    <Wrapper>
+    <AuthProvider>
+
+      <Wrapper>
       <header className="App-header">
-       
-        |<RoutesMain />
-          
-      
+       <RoutesMain />
       </header>
-    </Wrapper>
+      </Wrapper>
+
+    </AuthProvider>
   );
 }
 

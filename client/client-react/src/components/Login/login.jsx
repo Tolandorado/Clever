@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
+import { AuthContext } from '../../AuthContext';
 
 export const LoginForm = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { username, setUsername, password, setPassword, isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
