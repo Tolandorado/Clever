@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://klever:1@192.168.1.72:5432/users" # Я использую sqlite для теста
 db = SQLAlchemy(app)
+
+cors = CORS(app, resources={r"/api/users/*": {"origins": "*"}})
 
 class User(db.Model):
     __tablename__ = "users"
