@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://klever:1@192.168.1.72:5432/users" # Я использую sqlite для теста
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://klever:1@192.168.1.72:5432/users"
 db = SQLAlchemy(app)
 
 class User(db.Model):
@@ -22,6 +23,8 @@ class User(db.Model):
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', '*')
+    response.headers.add('Access-Control-Allow-Methods', '*')
     return response
 
 # Создаёт пользователя
@@ -134,4 +137,4 @@ def verify_user():
         })
 
 if __name__ == "__main__":
-    app.run("0.0.0.0", 5000, debug=True)
+    app.run("localhost", 5000, debug=True)

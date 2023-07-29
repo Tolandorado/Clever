@@ -3,24 +3,21 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from '../../AuthContext';
 
-export const Login = () => {
+export const Registration = () => {
 
   const { username, setUsername, password, setPassword, isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
-  console.log(isLoggedIn);
- 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://192.168.1.98:5000/api/users/verify", 
+      const response = await axios.post("http://192.168.1.98:5000/api/users/create", 
       {
         username: username,
         password: password,  
       },
       
       );
-
       if (response.status === 200) {
         setIsLoggedIn(true);
         console.log(response);
@@ -32,14 +29,12 @@ export const Login = () => {
       }
     } catch (error) {
       console.error(error);
-      
-    }
-  };
+    }};
 
   if (isLoggedIn) {
     return (
       <div>
-        <div>Вы вошли в аккаунт.</div>
+        <div>Вы зарегистрированы.</div>
         <NavLink to="/logined">Перейти на главную страницу</NavLink>
       </div>
     );
@@ -47,7 +42,7 @@ export const Login = () => {
 
   return (
     <div className="cont">
-    <h1>Вход</h1>
+    <h1>Регистрация</h1>
 <form onSubmit={handleSubmit}>
       <label>
         Имя пользователя:
@@ -73,7 +68,10 @@ export const Login = () => {
    
     </form>
 
-    <NavLink to="/reg">Не зарегистрированы?</NavLink>
+    <div>
+      
+    <NavLink to="/">Уже есть аккаунт?</NavLink>
+    </div>
 
     </div>
     
