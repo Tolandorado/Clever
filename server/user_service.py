@@ -3,10 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://klever:1@192.168.1.72:5432/users" # Я использую sqlite для теста
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Users.db" # Я использую sqlite для теста
 db = SQLAlchemy(app)
 
-cors = CORS(app, resources={r"/api/users/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 class User(db.Model):
     __tablename__ = "users"
@@ -27,17 +27,19 @@ class User(db.Model):
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
     return response
 
 # Создаёт пользователя
 @app.route("/api/users/create", methods=["POST",])
 def create_user():
-    new_user = User(request.form["username"], request.form["password"])
+    new_user = User(request.json.get('username'), request.json.get('password'))
     try:
         db.session.add(new_user)
         db.session.flush()
     except Exception as ex:
-        db.session.remove()
+        db.session.rollback()
         print(ex)
         print("Не удалось создать пользователя", new_user)
         return jsonify({
@@ -117,11 +119,11 @@ def delete_user(user_id):
 @app.route("/api/users/verify", methods=["GET", "POST"])
 def verify_user():
     if request.method == "GET":
-        username = request.args["username"]
-        password = request.args["password"]
+        username = request.json.get('username')
+        password = request.json.get('password')
     elif request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+        username = request.json.get('username')
+        password = request.json.get('password')
     
     try:
         user = User.query.filter_by(username=username).one()
