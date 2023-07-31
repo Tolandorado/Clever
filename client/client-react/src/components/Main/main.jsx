@@ -1,29 +1,38 @@
 import { NavLink } from "react-router-dom";
-import styles from "./main.module.scss"
-import { AuthContext } from '../../AuthContext';
-import React, { useContext, useState } from "react";
+import styles from "./main.module.scss";
+import { AuthContext } from "../../AuthContext";
+import React, { useContext } from "react";
 
 export const Main = () => {
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
-    const { username, setUsername, password, setPassword, isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  console.log(isLoggedIn);
 
-    console.log(isLoggedIn);
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (isLoggedIn === true) {
-            setIsLoggedIn(false)
-            console.log(isLoggedIn)
-        }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.error(error);
     }
-
+  };
+  if (isLoggedIn === false) {
     return (
-        <div className={styles.container}>
-            <h1>Main</h1>
-            <NavLink to='/posts'>Go to Posts page</NavLink>
-            {/* не работает */}
-            <NavLink to='/' onClick={handleSubmit}>Log out</NavLink> 
-           
-        </div>
-    )
-}
+      <div>
+        <div>Вы не авторизованы.</div>
+        <NavLink to="/">Перейти на страницу регистрации</NavLink>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <h1>Main</h1>
+      <NavLink to="/posts">Go to Posts page</NavLink>
+      {/* не работает */}
+      <NavLink to="/" onClick={handleSubmit}>
+        Log out
+      </NavLink>
+    </div>
+  );
+};
