@@ -51,6 +51,7 @@ export const Posts = () => {
     <div>
       <h1>post</h1>
       <NavLink to="/logined">Go to Main page</NavLink>
+      <NavLink to="/postCreate">Create post</NavLink>
     </div>
   );
 };
