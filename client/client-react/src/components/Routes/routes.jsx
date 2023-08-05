@@ -10,10 +10,10 @@ export const RoutesMain = () => {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/logined" element={<Main />}></Route>
+        <Route path="/" element={<Main />}></Route>
         <Route path="/posts" element={<Posts />}></Route>
         <Route path="/reg" element={<Registration />}></Route>
-        <Route path="/" element={<Login />}></Route>
+        
         <Route path="/postCreate" element={<PostCreate />}></Route>
       </Routes>
     </HashRouter>

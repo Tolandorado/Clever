@@ -43,7 +43,7 @@ export const PostCreate = () => {
       ></textarea>
 
       <label>Изображение:</label>
-      <input type="file" onChange={handleImageChange} />
+      <input type="file" accept="image/*" onChange={handleImageChange} />
 
       <button type="submit">Создать пост</button>
     </form>

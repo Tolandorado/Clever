@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import styles from "./main.module.scss";
 import { AuthContext } from "../../AuthContext";
 import React, { useContext } from "react";
+import { Login } from "../Login/login";
 
 export const Main = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -10,18 +11,17 @@ export const Main = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
+    
       setIsLoggedIn(false);
-    } catch (error) {
-      console.error(error);
-    }
+    
   };
   if (isLoggedIn === false) {
     return (
-      <div>
-        <div>Вы не авторизованы.</div>
-        <NavLink to="/">Перейти на страницу регистрации</NavLink>
-      </div>
+    //   <div>
+    //     <div>Вы не авторизованы.</div>
+    //     <NavLink to="/">Перейти на страницу регистрации</NavLink>
+    //   </div>
+    <Login />
     );
   }
 

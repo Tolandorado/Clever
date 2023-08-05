@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
+import styles from "./login.module.scss";
 
 export const Login = () => {
   const {
@@ -13,9 +14,7 @@ export const Login = () => {
     setIsLoggedIn,
   } = useContext(AuthContext);
 
-  useEffect(() => {
-    console.log(isLoggedIn);
-  }, [isLoggedIn]);
+ 
 
   const handleSubmit = useCallback(
     async (event) => {
@@ -48,29 +47,31 @@ export const Login = () => {
     return (
       <div>
         <div>Вы вошли в аккаунт.</div>
-        <NavLink to="/logined">Перейти на главную страницу</NavLink>
+        <NavLink to="/">Перейти на главную страницу</NavLink>
       </div>
     );
   }
 
   return (
-    <div className="cont">
+    <div className={styles.form}>
       <h1>Вход</h1>
       <form onSubmit={handleSubmit}>
-        <label>
+        <label className={styles.form_label}>
           Имя пользователя:
           <input
             type="text"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
+            className={styles.form_input}
           />
         </label>
-        <label>
+        <label >
           Пароль:
           <input
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            className={styles.form_input}
           />
         </label>
 

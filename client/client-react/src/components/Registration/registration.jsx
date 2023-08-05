@@ -46,7 +46,7 @@ export const Registration = () => {
     return (
       <div>
         <div>Вы зарегистрированы.</div>
-        <NavLink to="/logined">Перейти на главную страницу</NavLink>
+        <NavLink to="/">Перейти на главную страницу</NavLink>
       </div>
     );
   }
