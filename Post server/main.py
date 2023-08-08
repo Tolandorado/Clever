@@ -16,6 +16,15 @@ class Post(db.Model):
     def __repr__(self):
         return f"<Post id:{self.post_id}>"
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'post_id': self.post_id,
+            'path': self.path,
+            'author_id': self.author_id
+        }
+
 
 @app.route('/api/post/create/', methods=['POST'])
 def create_post():
@@ -35,7 +44,8 @@ def create_post():
 def read_post(post_id):
     try:
         post = Post.query.get_or_404(post_id)
-        return jsonify({'id': post.id, 'name': post.name, 'post_id': post.post_id, 'path': post.path, 'author_id': post.author_id})
+        return jsonify(
+            {'id': post.id, 'name': post.name, 'post_id': post.post_id, 'path': post.path, 'author_id': post.author_id})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -53,6 +63,15 @@ def update_post(post_id):
         return jsonify({'message': f"Post {post.id} has been updated successfully."}), 200
     except KeyError:
         return jsonify({'error': 'Invalid data provided.'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/post/list/', methods=['GET'])
+def get_post_list():
+    try:
+        posts = Post.query.all()
+        post_list = [post.to_dict() for post in posts]
+        return jsonify(post_list)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
