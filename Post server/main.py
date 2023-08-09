@@ -1,39 +1,40 @@
 from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from models import db, Post, Music, Sport, Programing, Design
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:56786789@localhost/clever_bd'
-db = SQLAlchemy(app)
+db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    post_id = db.Column(db.String(50), nullable=False)
-    path = db.Column(db.String(200), nullable=False)
-    author_id = db.Column(db.String(50), nullable=False)
-
-    def __repr__(self):
-        return f"<Post id:{self.post_id}>"
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'post_id': self.post_id,
-            'path': self.path,
-            'author_id': self.author_id
-        }
+def get_table_for_vector(vector):
+    table_mapping = {
+        'vector1': Post,
+        'vector2': Music,
+        'vector3': Sport,
+        'vector4': Design,
+        'vector5': Programing
+    }
+    return table_mapping.get(vector)
 
 
 @app.route('/api/post/create/', methods=['POST'])
 def create_post():
     try:
         data = request.json
-        new_post = Post(name=data['name'], post_id=data['post_id'], path=data['path'], author_id=data['author_id'])
-        db.session.add(new_post)
-        db.session.commit()
-        return jsonify({'message': f"Post {new_post.id} has been created successfully."}), 201
+        vector = data.get('vector')
+        post_type = data.get('post_type')
+
+        table = get_table_for_vector(vector)
+
+        if table and post_type:
+            new_post = table(**data)
+            db.session.add(new_post)
+            db.session.commit()
+            return jsonify({'message': f"Post {new_post.id} has been created successfully."}), 201
+        else:
+            return jsonify({'error': 'Invalid vector or post_type provided.'}), 400
     except KeyError:
         return jsonify({'error': 'Invalid data provided.'}), 400
     except Exception as e:
@@ -44,8 +45,7 @@ def create_post():
 def read_post(post_id):
     try:
         post = Post.query.get_or_404(post_id)
-        return jsonify(
-            {'id': post.id, 'name': post.name, 'post_id': post.post_id, 'path': post.path, 'author_id': post.author_id})
+        return jsonify(post.to_dict())
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -55,21 +55,43 @@ def update_post(post_id):
     try:
         post = Post.query.get_or_404(post_id)
         data = request.json
-        post.name = data['name']
-        post.post_id = data['post_id']
-        post.path = data['path']
-        post.author_id = data['author_id']
-        db.session.commit()
-        return jsonify({'message': f"Post {post.id} has been updated successfully."}), 200
+        vector = data.get('vector')
+        post_type = data.get('post_type')
+
+        if vector and post_type:
+            table = get_table_for_vector(vector)
+            if table:
+                for key, value in data.items():
+                    setattr(post, key, value)
+                db.session.commit()
+                return jsonify({'message': f"Post {post.id} has been updated successfully."}), 200
+            else:
+                return jsonify({'error': 'Invalid vector provided.'}), 400
+        else:
+            return jsonify({'error': 'Invalid vector or post_type provided.'}), 400
     except KeyError:
         return jsonify({'error': 'Invalid data provided.'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/api/post/list/', methods=['GET'])
 def get_post_list():
     try:
-        posts = Post.query.all()
+        vectors = request.args.getlist('vectors')
+        types = request.args.getlist('types')
+
+        query = db.session.query()
+
+        for vector in vectors:
+            table = get_table_for_vector(vector)
+            if table:
+                query = query.union_all(db.session.query(table))
+
+        if types:
+            query = query.filter(Post.post_type.in_(types))
+
+        posts = query.all()
         post_list = [post.to_dict() for post in posts]
         return jsonify(post_list)
     except Exception as e:
@@ -80,9 +102,14 @@ def get_post_list():
 def delete_post(post_id):
     try:
         post = Post.query.get_or_404(post_id)
-        db.session.delete(post)
-        db.session.commit()
-        return jsonify({'message': f"Post {post.id} has been deleted successfully."}), 200
+        table = get_table_for_vector(post.vector)
+        if table:
+            post_from_table = table.query.get_or_404(post_id)
+            db.session.delete(post_from_table)
+            db.session.commit()
+            return jsonify({'message': f"Post {post.id} has been deleted successfully."}), 200
+        else:
+            return jsonify({'error': 'Invalid vector provided.'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
