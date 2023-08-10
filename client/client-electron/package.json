@@ -15,7 +15,8 @@
   "author": "Admin",
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "react-scripts": "^2.1.3"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.2.1",
