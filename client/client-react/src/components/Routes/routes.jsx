@@ -20,3 +20,5 @@ export const RoutesMain = () => {
     </HashRouter>
   );
 };
+
+export default RoutesMain;
