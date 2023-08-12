@@ -3,6 +3,8 @@ import React, { useState } from "react";
 const CreateProject = () => {
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedVector, setSelectedVector] = useState("");
 
   const handleProjectNameChange = (e) => {
     setProjectName(e.target.value);
@@ -12,13 +14,31 @@ const CreateProject = () => {
     setProjectDescription(e.target.value);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+  };
+
+  const handleVectorChange = (e) => {
+    setSelectedVector(e.target.value);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Добавьте код для обработки создания проекта
-    console.log("Создан проект:", projectName, projectDescription);
-    // Сбросить значения полей после отправки
+
+    const projectData = {
+      projectName,
+      projectDescription,
+      selectedFile,
+      selectedVector,
+    };
+
+    console.log("Создан проект:", projectData);
+
     setProjectName("");
     setProjectDescription("");
+    setSelectedFile(null);
+    setSelectedVector("");
   };
 
   return (
@@ -40,6 +60,26 @@ const CreateProject = () => {
             value={projectDescription}
             onChange={handleProjectDescriptionChange}
           />
+        </label>
+        <br />
+        <label>
+          Add File:
+          <input
+            type="file"
+            accept="image/*, video/*, .zip, .rar"
+            onChange={handleFileChange}
+          />
+        </label>
+        <br />
+        <label>
+          Vector:
+          <select value={selectedVector} onChange={handleVectorChange}>
+            <option value="">Select Vector</option>
+            <option value="Up">Math</option>
+            <option value="Down">Programming</option>
+            <option value="Left">Physics</option>
+            <option value="Right">Biology</option>
+          </select>
         </label>
         <br />
         <button type="submit">Create Project</button>
