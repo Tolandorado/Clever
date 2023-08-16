@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import styles from './Pagination.module.css';
+import styles from './Pagination.module.scss';
 import {
     Link,
   } from "react-router-dom";
