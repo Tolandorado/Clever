@@ -31,7 +31,7 @@ def create_post():
     else:
         post_id = hex(vector_class.id)[2::]
         vector_class.post_id = post_id
-        path = vector + '/' + type + '/'
+        path = type + '/' + vector + '/'
         store(path, post_id, content)
         vector_class.path = path + post_id
         db.session.commit()
@@ -73,7 +73,7 @@ def get_posts():
 
 @app.route('/api/post/read/<string:vector>/<string:type>/<string:post_id>/', methods=['GET'])
 def read_post(vector, type, post_id):
-    content = read(vector + '/' + type + '/', post_id)
+    content = read(type + '/' + vector + '/', post_id)
     if content is None: return jsonify({
         "response-suc": False,
         "message": "No such a post"
@@ -98,7 +98,7 @@ def update_post(vector, type, post_id):
 
     # ^ Здесь нужно прописать проверку на существование данного поста ^
     content = request.json.get('content')
-    store(vector + '/' + type + '/', post_id, content)
+    store(type + '/' + vector + '/', post_id, content)
     return jsonify({"response-suc": True})
 
 @app.route('/api/post/delete/<string:vector>/<string:type>/<string:post_id>/', methods=['DELETE'])
@@ -110,7 +110,7 @@ def delete_post(vector, type, post_id):
     })
     db.session.query(vector_class).filter_by(post_id=post_id).delete()
 
-    if not delete(vector + '/' + type + '/', post_id):
+    if not delete(type + '/' + vector + '/', post_id):
         return jsonify({
             "response-suc": False,
             "message": f"Can't delete the post [{post_id}]"
