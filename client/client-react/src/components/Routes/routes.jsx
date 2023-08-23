@@ -5,20 +5,20 @@ import { Posts } from "../Posts/posts";
 import { Registration } from "../Registration/registration";
 import { Login } from "../Login/login";
 import { PostCreate } from "../PostCreate/postCreate";
-import { CreateEvent } from "../CreateEvent/createEvent";
-import { CreateProject } from "../CreateProject/createProject";
+import { Pagination } from "../Pagination/Pagination";
 
 export const RoutesMain = () => {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/posts" element={<Posts />} />
-        <Route path="/reg" element={<Registration />} />
-        <Route path="/postCreate" element={<PostCreate />} />
-        <Route path="/create-event" element={<CreateEvent />} />
-        <Route path="/create-project" element={<CreateProject />} />
+        <Route path="/" element={<Main />}></Route>
+        <Route path="/posts" element={<Posts />}></Route>
+        <Route path="/reg" element={<Registration />}></Route>
+
+        <Route path="/postCreate" element={<PostCreate />}></Route>
       </Routes>
     </HashRouter>
   );
 };
+
+export default RoutesMain;
