@@ -3,7 +3,6 @@ import styles from "./main.module.scss";
 import { AuthContext } from "../../AuthContext";
 import React, { useContext, useState } from "react";
 import { Login } from "../Login/login";
-import { useState } from "react";
 
 export const Main = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
