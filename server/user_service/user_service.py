@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Users.db" # Я использую sqlite для теста
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://klever:1@213.59.167.213:5432/users" # Я использую sqlite для теста
 db = SQLAlchemy(app)
 
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})

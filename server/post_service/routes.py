@@ -66,10 +66,12 @@ def get_posts():
                     "id": post.author_id,
                     "name": post.name
                 })
-    return jsonify({
+    response = jsonify({
         "response-suc": True,
         "posts": post_list,
     })
+    response.headers["X-Total-Count"] = len(post_list)
+    return response
 
 @app.route('/api/post/read/<string:vector>/<string:type>/<string:post_id>/', methods=['GET'])
 def read_post(vector, type, post_id):
