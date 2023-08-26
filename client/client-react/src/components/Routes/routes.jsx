@@ -15,15 +15,14 @@ export const RoutesMain = () => {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/posts" element={<Posts />} />
-        <Route path="/create-project" element={<Login />} />
         <Route path="/reg" element={<Registration />} />
         <Route path="/postCreate" element={<PostCreate />} />
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/create-project" element={<CreateProject />} />
-        <Route path="/create-project" element={<Pagination />} />
+        
       </Routes>
     </HashRouter>
   );
 };
 
-export default RoutesMain;
+

@@ -1,51 +1,46 @@
 import React, { useState, useContext } from "react";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
-import { AuthContext } from "../../AuthContext";
+import styles from "./post-create.module.scss"
+
 
 export const PostCreate = () => {
-  const { username } = useContext(AuthContext);
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [image, setImage] = useState(null);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const post = {
-      title: title,
-      body: body,
-      username: username,
-      image: image,
-    };
-
-    console.log(post);
-
-    // отправка формы на сервер
+  const [menuOpen, setMenuOpen] = useState(false);
+  
+  const handleMenuToggle = () => {
+    setMenuOpen(!menuOpen);
   };
 
-  const handleImageChange = (event) => {
-    setImage(event.target.files[0]);
+  const handleMenuItemClick = () => {
+    setMenuOpen(false);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Заголовок:</label>
-      <input
-        type="text"
-        value={title}
-        onChange={(event) => setTitle(event.target.value)}
-      />
+    <div>
+      <div>
+        <button onClick={handleMenuToggle} >
+          Создать
+        </button>
+      </div>
+      {menuOpen && (
+        <div>
+          <NavLink
+            to="/create-event"
+            onClick={handleMenuItemClick}
+            
+          >
+            Мероприятие
+          </NavLink>
+          <NavLink
+            to="/create-project"
+            onClick={handleMenuItemClick}
+            
+          >
+            Проект
+          </NavLink>
+        </div>
+      )}
 
-      <label>Содержимое:</label>
-      <textarea
-        value={body}
-        onChange={(event) => setBody(event.target.value)}
-      ></textarea>
-
-      <label>Изображение:</label>
-      <input type="file" accept="image/*" onChange={handleImageChange} />
-
-      <button type="submit">Создать пост</button>
-    </form>
+    </div>
   );
 };

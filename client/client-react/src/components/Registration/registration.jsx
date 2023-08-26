@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
+import styles from "./registration.module.scss";
 
 export const Registration = () => {
   const {
@@ -22,7 +23,7 @@ export const Registration = () => {
       event.preventDefault();
       try {
         const response = await axios.post(
-          "http://192.168.1.98:5000/api/users/create",
+          "http://213.59.167.213:5000/api/users/create",
           {
             username: username,
             password: password,
@@ -52,8 +53,8 @@ export const Registration = () => {
   }
 
   return (
-    <div className="cont">
-      <h1>Регистрация</h1>
+    <div className={styles.form}>
+      <h1 className={styles.form_title}>Регистрация</h1>
       <form onSubmit={handleSubmit}>
         <label>
           Имя пользователя:
@@ -61,6 +62,7 @@ export const Registration = () => {
             type="text"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
+            className={styles.form_input}
           />
         </label>
         <label>
@@ -69,13 +71,14 @@ export const Registration = () => {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            className={styles.form_input}
           />
         </label>
 
-        <button type="submit">Войти</button>
+        <button className={styles.form_submit} type="submit">Войти</button>
       </form>
 
-      <NavLink to="/">Уже есть аккаунт?</NavLink>
+      <NavLink to="/"><p>Уже есть аккаунт?</p></NavLink>
     </div>
   );
 };
