@@ -13,9 +13,7 @@ export const Login = () => {
     isLoggedIn,
     setIsLoggedIn,
   } = useContext(AuthContext);
-
- 
-
+  
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
@@ -54,7 +52,7 @@ export const Login = () => {
 
   return (
     <div className={styles.form}>
-      <h1>Вход</h1>
+      <h1 className={styles.form_title}>Вход</h1>
       <form onSubmit={handleSubmit}>
         <label className={styles.form_label}>
           Имя пользователя:
@@ -75,10 +73,10 @@ export const Login = () => {
           />
         </label>
 
-        <button type="submit">Войти</button>
+        <button className={styles.form_submit} type="submit">Войти</button>
       </form>
 
-      <NavLink to="/reg">Не зарегистрированы?</NavLink>
+      <NavLink to="/reg"><p>Не зарегистрированы?</p></NavLink>
     </div>
   );
 };
