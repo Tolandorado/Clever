@@ -8,32 +8,37 @@ export const Login = () => {
   const {
     username,
     setUsername,
+    userId,
+    setUserId,
     password,
     setPassword,
     isLoggedIn,
     setIsLoggedIn,
   } = useContext(AuthContext);
+
+  console.log(username, userId, isLoggedIn);
   
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
 
       try {
-        const response = await axios.get(
-          "https://jsonplaceholder.typicode.com"
-          // {
-          //   username: username,
-          //   password: password,
-          // }
+        const response = await axios.post(
+          "http://192.168.1.84:5000/api/users/verify",               
+          {
+            username: username,
+            password: password,
+          }          
         );
 
-        if (response.status === 200) {
+        if (response.status === 200 && response.data["response-suc"] === true) {
           setIsLoggedIn(true);
+          setUserId(response.data.id)
           console.log(response);
+          console.log("Данные пользователя:", username, password, userId);
         } else {
-          // Обработка ошибки входа
-          return <h1>не вошел ты!</h1>;
-        }
+          console.log(response)
+          }
       } catch (error) {
         console.error(error);
       }
@@ -41,14 +46,7 @@ export const Login = () => {
     [password, username, setIsLoggedIn]
   );
 
-  if (isLoggedIn) {
-    return (
-      <div>
-        <div>Вы вошли в аккаунт.</div>
-        <NavLink to="/">Перейти на главную страницу</NavLink>
-      </div>
-    );
-  }
+
 
   return (
     <div className={styles.form}>

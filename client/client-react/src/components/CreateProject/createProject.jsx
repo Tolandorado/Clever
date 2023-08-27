@@ -4,16 +4,16 @@ import axios from "axios";
 import { ButtonToMain } from "../ButtonToMain/buttonToMain";
 
   export const CreateProject = () => {
-    const [projectName, setProjectName] = useState("");
+    const [postName, setPostName] = useState("");
     const [description, setDescription] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [selectedVector, setSelectedVector] = useState("");
-    const {username} = useContext(AuthContext);
+    const {username, userId} = useContext(AuthContext);
 
   
 
   const handleEventNameChange = (e) => {
-    setProjectName(e.target.value);
+    setPostName(e.target.value);
   };
 
   const handleEventDescriptionChange = (e) => {
@@ -32,11 +32,14 @@ import { ButtonToMain } from "../ButtonToMain/buttonToMain";
   const handleSubmit = async (e) => {
     e.preventDefault();
     const currentTime = new Date();
+    const postingTime = currentTime.toLocaleDateString().slice(0);
     const requestData = {
-      projectName,
-      currentTime,
+      postName,
+      postingTime,
       authorName: username,
+      authorId: userId,
       selectedVector,
+      typeOf: "project",
       content: {
         description,
         mediaContent: {
@@ -54,7 +57,7 @@ import { ButtonToMain } from "../ButtonToMain/buttonToMain";
     
     console.log("Создан проект:", requestData);
 
-    setProjectName("");
+    setPostName("");
     setDescription("");
     setSelectedFile(null);
     setSelectedVector("");
@@ -80,7 +83,7 @@ import { ButtonToMain } from "../ButtonToMain/buttonToMain";
           Event Name:
           <input
             type="text"
-            value={projectName}
+            value={postName}
             onChange={handleEventNameChange}
           />
         </label>

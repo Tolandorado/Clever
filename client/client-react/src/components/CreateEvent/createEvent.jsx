@@ -4,14 +4,14 @@ import axios from "axios";
 import { ButtonToMain } from "../ButtonToMain/buttonToMain";
 
 export const CreateEvent = () => {
-  const [eventName, setEventName] = useState("");
+  const [postName, setPostName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedVector, setSelectedVector] = useState("");
-  const {username} = useContext(AuthContext);
+  const {username, userId} = useContext(AuthContext);
 
   const handleEventNameChange = (e) => {
-    setEventName(e.target.value);
+    setPostName(e.target.value);
   };
 
   const handleEventDescriptionChange = (e) => {
@@ -30,11 +30,14 @@ export const CreateEvent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const currentTime = new Date();
+    const postingTime = currentTime.toLocaleDateString().slice(0);
     const requestData = {
-      eventName,
-      currentTime,
+      postName,
+      postingTime,
       authorName: username,
+      authorId: userId,
       selectedVector,
+      typeOf: "event",
       content: {
         description,
         mediaContent: {
@@ -52,7 +55,7 @@ export const CreateEvent = () => {
 
     console.log("Создано мероприятие:", requestData);
 
-    setEventName("");
+    setPostName("");
     setDescription("");
     setSelectedFile(null);
     setSelectedVector("");
@@ -78,7 +81,7 @@ export const CreateEvent = () => {
           Event Name:
           <input
             type="text"
-            value={eventName}
+            value={postName}
             onChange={handleEventNameChange}
           />
         </label>
