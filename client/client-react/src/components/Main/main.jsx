@@ -6,17 +6,20 @@ import { Login } from "../Login/login";
 import { Posts } from "../Posts/posts";
 
 export const Main = () => {
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn, userId, setUserId, username, setUsername, setPassword } = useContext(AuthContext);
 
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = (event) => {
+    console.log("Submit button clicked")
     setIsLoggedIn(false);
+    setPassword("");
+    setUsername("");
+    setUserId("");
   };
 
   if (isLoggedIn === false) {
     return <Login />;
-  }
+  } 
 
   return (
     <div className={styles.container}>
@@ -25,6 +28,7 @@ export const Main = () => {
       <NavLink to="/" onClick={handleSubmit}>
         Выйти
       </NavLink>
+
 
     </div>
   );

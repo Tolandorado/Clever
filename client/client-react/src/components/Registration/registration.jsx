@@ -1,13 +1,15 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
 import styles from "./registration.module.scss";
 
 export const Registration = () => {
+  const [isReg, setIsReg] = useState(false);
   const {
     username,
     setUsername,
+    userId,
     password,
     setPassword,
     isLoggedIn,
@@ -15,7 +17,7 @@ export const Registration = () => {
   } = useContext(AuthContext);
 
   useEffect(() => {
-    console.log(isLoggedIn);
+    console.log(username, userId, isLoggedIn);
   }, []);
 
   const handleSubmit = useCallback(
@@ -23,18 +25,19 @@ export const Registration = () => {
       event.preventDefault();
       try {
         const response = await axios.post(
-          "http://213.59.167.213:5000/api/users/create",
+          "http://192.168.1.84:5000/api/users/create",
           {
             username: username,
             password: password,
           }
         );
-        if (response.status === 200) {
-          setIsLoggedIn(true);
+        if (response.status === 200 && response.data["response-suc"] === true) {
+          setIsReg(true);
+
           console.log(response);
+          console.log("Данные пользователя:", username, password, userId);
         } else {
-          // Обработка ошибки входа
-          return <h1>не вошел ты!</h1>;
+          console.log(response)
         }
       } catch (error) {
         console.error(error);
@@ -43,11 +46,11 @@ export const Registration = () => {
     [password, username, setIsLoggedIn]
   );
 
-  if (isLoggedIn) {
+  if (isReg === true) {
     return (
       <div>
         <div>Вы зарегистрированы.</div>
-        <NavLink to="/">Перейти на главную страницу</NavLink>
+        <NavLink to="/">Авторизируетесь</NavLink>
       </div>
     );
   }
@@ -75,7 +78,7 @@ export const Registration = () => {
           />
         </label>
 
-        <button className={styles.form_submit} type="submit">Войти</button>
+        <button className={styles.form_submit} type="submit">Зарегистрироваться</button>
       </form>
 
       <NavLink to="/"><p>Уже есть аккаунт?</p></NavLink>

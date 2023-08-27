@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../AuthContext";
 import { PostCreate } from "../PostCreate/postCreate";
+import styles from "./posts.module.scss";
 
 export const Posts = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
