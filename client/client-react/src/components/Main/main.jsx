@@ -22,6 +22,7 @@ export const Main = () => {
   } 
 
   return (
+
     <>
     <NavLink to="/" onClick={handleSubmit}>
         Выйти
@@ -30,5 +31,6 @@ export const Main = () => {
       <Posts/>
     </div>  
     </>
+
   );
 };

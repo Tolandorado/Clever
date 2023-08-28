@@ -16,8 +16,6 @@ export const Login = () => {
     setIsLoggedIn,
   } = useContext(AuthContext);
 
-
-  
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
@@ -35,7 +33,9 @@ export const Login = () => {
           setIsLoggedIn(true);
           setUserId(response.data.id)
           console.log(response);
+
           console.log("Данные пользователя при авторизации:", username, password, userId);
+
         } else {
           console.log(response)
           }

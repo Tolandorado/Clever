@@ -35,7 +35,10 @@ export const Registration = () => {
           setIsReg(true);
 
           console.log(response);
+
           console.log("Данные пользователя при регистрации:", username, password, userId);
+
+
         } else {
           console.log(response)
         }

@@ -1,4 +1,5 @@
 from routes import *
+<<<<<<< HEAD
 import sys
 
 if __name__ == "__main__":
@@ -13,3 +14,8 @@ if __name__ == "__main__":
             print(f"Неизвестный ключ <{sys.argv[1]}>\nПопробуйте dev или ndev")
     else:
         print("Неверно заданы ключи\nПопробуйте start-d или start")
+=======
+
+if __name__ == "__main__":
+    app.run("0.0.0.0", 5000, debug=True)
+>>>>>>> server-dev
