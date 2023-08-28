@@ -16,7 +16,7 @@ export const Login = () => {
     setIsLoggedIn,
   } = useContext(AuthContext);
 
-  console.log(username, userId, isLoggedIn);
+
   
   const handleSubmit = useCallback(
     async (event) => {
@@ -35,7 +35,7 @@ export const Login = () => {
           setIsLoggedIn(true);
           setUserId(response.data.id)
           console.log(response);
-          console.log("Данные пользователя:", username, password, userId);
+          console.log("Данные пользователя при авторизации:", username, password, userId);
         } else {
           console.log(response)
           }
@@ -45,8 +45,6 @@ export const Login = () => {
     },
     [password, username, setIsLoggedIn]
   );
-
-
 
   return (
     <div className={styles.form}>

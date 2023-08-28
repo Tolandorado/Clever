@@ -22,14 +22,13 @@ export const Main = () => {
   } 
 
   return (
-    <div className={styles.container}>
-      <h1>Main</h1>
-      <Posts/>
-      <NavLink to="/" onClick={handleSubmit}>
+    <>
+    <NavLink to="/" onClick={handleSubmit}>
         Выйти
       </NavLink>
-
-
-    </div>
+    <div className={styles.container}> 
+      <Posts/>
+    </div>  
+    </>
   );
 };
