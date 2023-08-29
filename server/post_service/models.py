@@ -16,7 +16,7 @@ def after_request(response):
     return response
 
 class BasePost(db.Model):
-    __abstruct__ = True
+    __abstract__ = True
 
     id = db.Column(db.Integer, primary_key=True)
     postName = db.Column(db.String(200), nullable=False)

@@ -1,6 +1,9 @@
 from models import *
 from storage import write_post, read_post, delete_post
 
+import random
+
+
 def failure(message = None):
     return jsonify({
         "response-suc": False,
@@ -69,6 +72,95 @@ def api_create_post():
     except Exception as ex:
         print(ex)
         return failure("Что-то явно пошло не так, и я не знаю что именно!")
+
+@app.route("/api/post/list/random/<int:limit>", methods=["GET",])
+def api_get_list_of_posts_random_limited(limit):
+    try:
+        if limit < 0:
+            return failure("Лимит постов не может быть меньше нуля")
+
+        response = []
+        posts = []
+
+        for table in ALLOWED_TYPES.values():
+            posts += db.session.query(table).all()
+        
+        print(posts)
+
+        for i in range(limit):
+            if len(posts) == 0:
+                break
+            index = random.randint(0, len(posts))
+            post = posts[index]
+            posts.pop(index)
+            response.append({
+                "postName": post.postName,
+                "postingTime": post.postingTime,
+                "authorName": post.authorName,
+                "authorId": post.authorId,
+                "vector": post.vector,
+                "type": post.type,
+                "id": post.id,
+            })
+
+
+        return success(response)
+
+    except Exception as ex:
+        print(ex)
+        return failure("Вот прям совсем никак не обрабатывается")
+
+@app.route("/api/post/list/<int:limit>", methods=["GET",])
+def api_get_list_of_posts_limited(limit):
+    try:
+        if limit < 0:
+            return failure("Лимит постов не может быть меньше нуля")
+
+        response = []
+        for table in ALLOWED_TYPES.values():
+            posts = db.session.query(table).all()
+            for post in posts:
+                response.append({
+                    "postName": post.postName,
+                    "postingTime": post.postingTime,
+                    "authorName": post.authorName,
+                    "authorId": post.authorId,
+                    "vector": post.vector,
+                    "type": post.type,
+                    "id": post.id,
+                })
+                if len(response) >= limit:
+                    break
+            if len(response) >= limit:
+                    break
+        return success(response)
+
+    except Exception as ex:
+        print(ex)
+        return failure("Вот прям совсем никак не обрабатывается")
+
+
+@app.route("/api/post/list/all", methods=["GET",])
+def api_get_list_of_all_posts():
+    try:
+        response = []
+        for table in ALLOWED_TYPES.values():
+            posts = db.session.query(table).all()
+            for post in posts:
+                response.append({
+                    "postName": post.postName,
+                    "postingTime": post.postingTime,
+                    "authorName": post.authorName,
+                    "authorId": post.authorId,
+                    "vector": post.vector,
+                    "type": post.type,
+                    "id": post.id,
+                })
+        return success(response)
+
+    except Exception as ex:
+        print(ex)
+        return failure("Вот прям совсем никак не обрабатывается")
 
 @app.route("/api/post/list", methods=["GET",])
 def api_get_list_of_posts():
@@ -204,6 +296,7 @@ def api_update_post():
             return failure("Не вышло обновить контент")
         
         # Вроде на этом всё
+        db.session.commit()
         return success()
 
     except Exception as ex:
@@ -240,6 +333,7 @@ def api_delete_post():
             print(ex)
             return failure("Не удалось удалить контент")
         
+        db.session.commit()
         return success()
 
     except Exception as ex:

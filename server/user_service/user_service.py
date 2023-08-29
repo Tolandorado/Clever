@@ -138,6 +138,3 @@ def verify_user():
             "correct": False if user is None or user.password != password else True,
             "id": user.user_id if user is not None and user.password == password else None
         })
-
-if __name__ == "__main__":
-    app.run("0.0.0.0", 5000, debug=True)
