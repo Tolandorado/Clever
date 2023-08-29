@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../AuthContext";
 import axios from "axios";
 import { ButtonToMain } from "../ButtonToMain/buttonToMain";
+import styles from "./create-project.module.scss"
 
   export const CreateProject = () => {
     const [postName, setPostName] = useState("");
@@ -39,7 +40,7 @@ import { ButtonToMain } from "../ButtonToMain/buttonToMain";
       authorName: username,
       authorId: userId,
       selectedVector,
-      typeOf: "project",
+      typeOf: "projects",
       content: {
         description,
         mediaContent: {
@@ -49,7 +50,7 @@ import { ButtonToMain } from "../ButtonToMain/buttonToMain";
     };   
 
     try {
-      const response = await axios.post("/api", requestData);
+      const response = await axios.post("http://localhost:5001/api/post/create", requestData);
       console.log("Ответ с сервера", response);
     } catch(error) {
       console.error("Ошибка запроса", error);
@@ -64,13 +65,13 @@ import { ButtonToMain } from "../ButtonToMain/buttonToMain";
   };
 
   return (
-    <div>
+    <div >
       <ButtonToMain/>
       <h1>Создание проекта</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <label>
           Vector:
-          <select value={selectedVector} onChange={handleVectorChange}>
+          <select className={styles.form_submit} value={selectedVector} onChange={handleVectorChange}>
             <option value="">Выбрать вектор</option>
             <option value="Science">Science</option>
             <option value="Sport">Sport</option>
@@ -82,30 +83,34 @@ import { ButtonToMain } from "../ButtonToMain/buttonToMain";
         <label>
           Event Name:
           <input
+            className={styles.form_input}
             type="text"
             value={postName}
             onChange={handleEventNameChange}
           />
         </label>
         <br />
-        <label>
+        <label className={styles.form_label}>
           Event Description:
+          <br />
           <textarea
+            className={styles.form_input}
             value={description}
             onChange={handleEventDescriptionChange}
           />
         </label>
         <br />
-        <label>
+        <label className={styles.form_label}>
           Добавить изображение
           <input
+            className={styles.form_input}
             type="file"
             accept="image/*"
             onChange={handleFileChange}
           />
         </label>
         <br />
-        <button type="submit">Опубликовать</button>
+        <button className={styles.form_submit} type="submit">Опубликовать</button>
       </form>
     </div>
   );

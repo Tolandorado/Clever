@@ -7,6 +7,7 @@ import styles from "./posts.module.scss";
 
 export const Posts = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
   // const [pages, setPages] = useState([]);
 
   // const url = "http://localhost:5000/api/get-test";
@@ -40,6 +41,39 @@ export const Posts = () => {
   //     <NavLink to="/logined">Go to Main page</NavLink>
   //   </div>
   // );
+
+  const url = "http://localhost:5001/api/post/list/random/8/0";
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(url, {
+          params: {
+            
+              vectors: ["Sport"],
+              types: ["projects"]
+            
+          },
+          
+        });
+        console.log("ответ", response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    if (isLoading) {
+      fetchData();
+    }
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  
+  
   if (isLoggedIn === false) {
     return (
       <div>

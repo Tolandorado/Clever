@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../../AuthContext";
 import axios from "axios";
 import { ButtonToMain } from "../ButtonToMain/buttonToMain";
+import styles from './create-event.module.scss';
 
 export const CreateEvent = () => {
   const [postName, setPostName] = useState("");
@@ -37,7 +38,7 @@ export const CreateEvent = () => {
       authorName: username,
       authorId: userId,
       selectedVector,
-      typeOf: "event",
+      typeOf: "activities",
       content: {
         description,
         mediaContent: {
@@ -47,7 +48,7 @@ export const CreateEvent = () => {
     };
 
     try {
-      const response = await axios.post("/api", requestData);
+      const response = await axios.post("http://localhost:5001/api/post/create", requestData);
       console.log("Ответ с сервера", response);
     } catch(error) {
       console.error("Ошибка запроса", error);
@@ -62,50 +63,57 @@ export const CreateEvent = () => {
   };
 
   return (
-    <div>
-      <ButtonToMain/>
-      <h1>Create Event</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Vector:
-          <select value={selectedVector} onChange={handleVectorChange}>
-            <option value="">Select Vector</option>
-            <option value="Science">Science</option>
-            <option value="Sport">Sport</option>
-            <option value="Nature">Nature</option>
-            <option value="Religion">Religion</option>
-          </select>
-        </label>
+    
+    
+    <div >
+    <ButtonToMain/>
+    <h1>Создание мероприятия</h1>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <label>
+        Vector:
+        <select className={styles.form_submit} value={selectedVector} onChange={handleVectorChange}>
+          <option value="">Select Vector</option>
+          <option value="Science">Science</option>
+          <option value="Sport">Sport</option>
+          <option value="Nature">Nature</option>
+          <option value="Religion">Religion</option>
+        </select>
+      </label>
+      <br />
+      <label className={styles.form_label}>
+        Event Name:
+        <input
+          className={styles.form_input}
+          type="text"
+          value={postName}
+          onChange={handleEventNameChange}
+        />
+      </label>
+      <br />
+      <label className={styles.form_label}>
+        Event Description:
         <br />
-        <label>
-          Event Name:
-          <input
-            type="text"
-            value={postName}
-            onChange={handleEventNameChange}
-          />
-        </label>
-        <br />
-        <label>
-          Event Description:
-          <textarea
-            value={description}
-            onChange={handleEventDescriptionChange}
-          />
-        </label>
-        <br />
-        <label>
-          Добавить изображение
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-        </label>
-        <br />
-        <button type="submit">Опубликовать</button>
-      </form>
-    </div>
+        <textarea
+          className={styles.form_input}
+          value={description}
+          onChange={handleEventDescriptionChange}
+        />
+      </label>
+      <br />
+      <label className={styles.form_label}>
+        Добавить изображение
+        <input
+          className={styles.form_input}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+      </label>
+      <br />
+      <button className={styles.form_submit} type="submit">Опубликовать</button>
+    </form>
+  </div>
+    
   );
 };
 
