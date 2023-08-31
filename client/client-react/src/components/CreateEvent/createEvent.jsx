@@ -1,22 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../AuthContext";
+import axios from "axios";
+import { ButtonToMain } from "../ButtonToMain/buttonToMain";
 
-const CreateEvent = () => {
-  const [eventName, setEventName] = useState("");
-  const [eventDescription, setEventDescription] = useState("");
-  const [eventDate, setEventDate] = useState("");
+export const CreateEvent = () => {
+  const [postName, setPostName] = useState("");
+  const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedVector, setSelectedVector] = useState("");
+  const {username, userId} = useContext(AuthContext);
 
   const handleEventNameChange = (e) => {
-    setEventName(e.target.value);
+    setPostName(e.target.value);
   };
 
   const handleEventDescriptionChange = (e) => {
-    setEventDescription(e.target.value);
-  };
-
-  const handleEventDateChange = (e) => {
-    setEventDate(e.target.value);
+    setDescription(e.target.value);
   };
 
   const handleFileChange = (e) => {
@@ -28,35 +27,61 @@ const CreateEvent = () => {
     setSelectedVector(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const eventData = {
-      eventName,
-      eventDescription,
-      eventDate,
-      selectedFile,
+    const currentTime = new Date();
+    const postingTime = currentTime.toLocaleDateString().slice(0);
+    const requestData = {
+      postName,
+      postingTime,
+      authorName: username,
+      authorId: userId,
       selectedVector,
+      typeOf: "event",
+      content: {
+        description,
+        mediaContent: {
+          selectedFile,
+        }
+      }
     };
 
-    console.log("Создано мероприятие:", eventData);
+    try {
+      const response = await axios.post("/api", requestData);
+      console.log("Ответ с сервера", response);
+    } catch(error) {
+      console.error("Ошибка запроса", error);
+    }
 
-    setEventName("");
-    setEventDescription("");
-    setEventDate("");
+    console.log("Создано мероприятие:", requestData);
+
+    setPostName("");
+    setDescription("");
     setSelectedFile(null);
     setSelectedVector("");
   };
 
   return (
     <div>
+      <ButtonToMain/>
       <h1>Create Event</h1>
       <form onSubmit={handleSubmit}>
+        <label>
+          Vector:
+          <select value={selectedVector} onChange={handleVectorChange}>
+            <option value="">Select Vector</option>
+            <option value="Science">Science</option>
+            <option value="Sport">Sport</option>
+            <option value="Nature">Nature</option>
+            <option value="Religion">Religion</option>
+          </select>
+        </label>
+        <br />
         <label>
           Event Name:
           <input
             type="text"
-            value={eventName}
+            value={postName}
             onChange={handleEventNameChange}
           />
         </label>
@@ -64,44 +89,23 @@ const CreateEvent = () => {
         <label>
           Event Description:
           <textarea
-            value={eventDescription}
+            value={description}
             onChange={handleEventDescriptionChange}
           />
         </label>
         <br />
         <label>
-          Event Date (mm/dd/yy):
-          <input
-            type="text"
-            value={eventDate}
-            onChange={handleEventDateChange}
-          />
-        </label>
-        <br />
-        <label>
-          Add File:
+          Добавить изображение
           <input
             type="file"
-            accept="image/*, video/*, .zip, .rar"
+            accept="image/*"
             onChange={handleFileChange}
           />
         </label>
         <br />
-        <label>
-          Vector:
-          <select value={selectedVector} onChange={handleVectorChange}>
-            <option value="">Select Vector</option>
-            <option value="Up">Science</option>
-            <option value="Down">Sport</option>
-            <option value="Left">Nature</option>
-            <option value="Right">Religion</option>
-          </select>
-        </label>
-        <br />
-        <button type="submit">Create Event</button>
+        <button type="submit">Опубликовать</button>
       </form>
     </div>
   );
 };
 
-export { CreateEvent };

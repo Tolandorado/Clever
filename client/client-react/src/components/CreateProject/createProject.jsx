@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../AuthContext";
+import axios from "axios";
+import { ButtonToMain } from "../ButtonToMain/buttonToMain";
 
-const CreateProject = () => {
-  const [projectName, setProjectName] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedVector, setSelectedVector] = useState("");
+  export const CreateProject = () => {
+    const [postName, setPostName] = useState("");
+    const [description, setDescription] = useState("");
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedVector, setSelectedVector] = useState("");
+    const {username, userId} = useContext(AuthContext);
 
-  const handleProjectNameChange = (e) => {
-    setProjectName(e.target.value);
+  
+
+  const handleEventNameChange = (e) => {
+    setPostName(e.target.value);
   };
 
-  const handleProjectDescriptionChange = (e) => {
-    setProjectDescription(e.target.value);
+  const handleEventDescriptionChange = (e) => {
+    setDescription(e.target.value);
   };
 
   const handleFileChange = (e) => {
@@ -23,69 +29,85 @@ const CreateProject = () => {
     setSelectedVector(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const projectData = {
-      projectName,
-      projectDescription,
-      selectedFile,
+    const currentTime = new Date();
+    const postingTime = currentTime.toLocaleDateString().slice(0);
+    const requestData = {
+      postName,
+      postingTime,
+      authorName: username,
+      authorId: userId,
       selectedVector,
-    };
+      typeOf: "project",
+      content: {
+        description,
+        mediaContent: {
+          selectedFile,
+        }
+      }
+    };   
 
-    console.log("Создан проект:", projectData);
+    try {
+      const response = await axios.post("/api", requestData);
+      console.log("Ответ с сервера", response);
+    } catch(error) {
+      console.error("Ошибка запроса", error);
+    }
+    
+    console.log("Создан проект:", requestData);
 
-    setProjectName("");
-    setProjectDescription("");
+    setPostName("");
+    setDescription("");
     setSelectedFile(null);
     setSelectedVector("");
   };
 
   return (
     <div>
-      <h1>Create Project</h1>
+      <ButtonToMain/>
+      <h1>Создание проекта</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Project Name:
+          Vector:
+          <select value={selectedVector} onChange={handleVectorChange}>
+            <option value="">Выбрать вектор</option>
+            <option value="Science">Science</option>
+            <option value="Sport">Sport</option>
+            <option value="Nature">Nature</option>
+            <option value="Religion">Religion</option>
+          </select>
+        </label>
+        <br />
+        <label>
+          Event Name:
           <input
             type="text"
-            value={projectName}
-            onChange={handleProjectNameChange}
+            value={postName}
+            onChange={handleEventNameChange}
           />
         </label>
         <br />
         <label>
-          Project Description:
+          Event Description:
           <textarea
-            value={projectDescription}
-            onChange={handleProjectDescriptionChange}
+            value={description}
+            onChange={handleEventDescriptionChange}
           />
         </label>
         <br />
         <label>
-          Add File:
+          Добавить изображение
           <input
             type="file"
-            accept="image/*, video/*, .zip, .rar"
+            accept="image/*"
             onChange={handleFileChange}
           />
         </label>
         <br />
-        <label>
-          Vector:
-          <select value={selectedVector} onChange={handleVectorChange}>
-            <option value="">Select Vector</option>
-            <option value="Up">Math</option>
-            <option value="Down">Programming</option>
-            <option value="Left">Physics</option>
-            <option value="Right">Biology</option>
-          </select>
-        </label>
-        <br />
-        <button type="submit">Create Project</button>
+        <button type="submit">Опубликовать</button>
       </form>
     </div>
   );
 };
 
-export { CreateProject };

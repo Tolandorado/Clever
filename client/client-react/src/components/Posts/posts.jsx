@@ -2,9 +2,6 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../AuthContext";
-import { PostCreate } from "../PostCreate/postCreate";
-import styles from "./posts.module.scss";
-import { Link } from "react-router-dom";
 
 export const Posts = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -82,27 +79,10 @@ export const Posts = () => {
   };
 
   return (
-    <div className="main">
-      <h1>Posts</h1>
-      <div className={styles.postContainer}>
-        {pages.map((page) => (
-          <div key={page.id} className={styles.postCard}>
-            <img
-              src={page.thumbnailUrl}
-              alt={page.title}
-              className={styles.postImage}
-            />
-            <div className={styles.postContent}>
-              <h2 className={styles.postTitle}>{page.title}</h2>
-              <p className={styles.postDate}>
-                {new Date(page.date).toLocaleDateString()}
-              </p>
-              <p className={styles.postAuthor}>By {page.author}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div>
+      <h1>post</h1>
       <NavLink to="/logined">Go to Main page</NavLink>
+      <NavLink to="/postCreate">Create post</NavLink>
     </div>
   );
 };
