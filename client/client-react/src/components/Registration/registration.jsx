@@ -25,7 +25,7 @@ export const Registration = () => {
       event.preventDefault();
       try {
         const response = await axios.post(
-          "http://192.168.1.84:5000/api/users/create",
+          "http://192.168.1.132:5000/api/users/create",
           {
             username: username,
             password: password,

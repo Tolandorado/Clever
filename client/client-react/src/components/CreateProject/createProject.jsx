@@ -40,6 +40,7 @@ import styles from "./create-project.module.scss"
       authorName: username,
       authorId: userId,
       selectedVector,
+      selectedFile,
       typeOf: "projects",
       content: {
         description,
@@ -50,7 +51,7 @@ import styles from "./create-project.module.scss"
     };   
 
     try {
-      const response = await axios.post("http://localhost:5001/api/post/create", requestData);
+      const response = await axios.post("http://192.168.1.132:5001/api/post/create", requestData);
       console.log("Ответ с сервера", response);
     } catch(error) {
       console.error("Ошибка запроса", error);
@@ -72,7 +73,7 @@ import styles from "./create-project.module.scss"
         <label>
           Vector:
           <select className={styles.form_submit} value={selectedVector} onChange={handleVectorChange}>
-            <option value="">Выбрать вектор</option>
+            <option value="">Обязательно</option>
             <option value="Science">Science</option>
             <option value="Sport">Sport</option>
             <option value="Nature">Nature</option>
@@ -91,10 +92,10 @@ import styles from "./create-project.module.scss"
         </label>
         <br />
         <label className={styles.form_label}>
-          Event Description:
+          Содержимое публикации:
           <br />
           <textarea
-            className={styles.form_input}
+            className={styles.form_input_text}
             value={description}
             onChange={handleEventDescriptionChange}
           />

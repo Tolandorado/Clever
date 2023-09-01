@@ -48,7 +48,7 @@ export const CreateEvent = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:5001/api/post/create", requestData);
+      const response = await axios.post("http://192.168.1.132:5001/api/post/create", requestData);
       console.log("Ответ с сервера", response);
     } catch(error) {
       console.error("Ошибка запроса", error);

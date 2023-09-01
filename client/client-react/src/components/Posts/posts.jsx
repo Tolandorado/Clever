@@ -42,20 +42,12 @@ export const Posts = () => {
   //   </div>
   // );
 
-  const url = "http://localhost:5001/api/post/list/random/8/0";
+  const url = "https://jsonplaceholder.typicode.com/photos";
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(url, {
-          params: {
-            
-              vectors: ["Sport"],
-              types: ["projects"]
-            
-          },
-          
-        });
+        const response = await axios.get(url);
         console.log("ответ", response.data);
         setIsLoading(false);
       } catch (error) {
