@@ -30,6 +30,9 @@ import styles from "./create-project.module.scss"
     setSelectedVector(e.target.value);
   };
 
+  const IMG = new FormData();
+  IMG.append('image', selectedFile);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const currentTime = new Date();
@@ -40,7 +43,7 @@ import styles from "./create-project.module.scss"
       authorName: username,
       authorId: userId,
       selectedVector,
-      selectedFile,
+      selectedFile: IMG,
       typeOf: "projects",
       content: {
         description,
@@ -50,9 +53,24 @@ import styles from "./create-project.module.scss"
       }
     };   
 
+    const formData = new FormData();
+    formData.append('postName', requestData.postName);
+    formData.append('postingTime', requestData.postingTime);
+    formData.append('authorName', requestData.authorName);
+    formData.append('authorId', requestData.authorId);
+    formData.append('selectedVector', requestData.selectedVector);
+    formData.append('selectedFile', requestData.selectedFile);
+    formData.append('typeOf', requestData.typeOf);
+    formData.append('content[description]', requestData.content.description);
+    formData.append('content[mediaContent][selectedFile]', requestData.content.mediaContent.selectedFile);
+
     try {
-      const response = await axios.post("http://192.168.1.132:5001/api/post/create", requestData);
-      console.log("Ответ с сервера", response);
+      const response = await axios.post("http://192.168.1.132:5001/api/post/create", formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+      });
+      console.log("Ответ с сервера", response.data);
     } catch(error) {
       console.error("Ошибка запроса", error);
     }
@@ -82,7 +100,7 @@ import styles from "./create-project.module.scss"
         </label>
         <br />
         <label>
-          Event Name:
+          Название публикации:
           <input
             className={styles.form_input}
             type="text"
@@ -95,7 +113,7 @@ import styles from "./create-project.module.scss"
           Содержимое публикации:
           <br />
           <textarea
-            className={styles.form_input_text}
+            className={styles.form_text}
             value={description}
             onChange={handleEventDescriptionChange}
           />
