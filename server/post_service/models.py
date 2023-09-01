@@ -1,12 +1,18 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_session import Session
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Vectors.db'
 db = SQLAlchemy(app)
 
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+app.config["SECRET_KEY"] = "awaf11uhuieiudnuiqdh"
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
 
 @app.after_request
 def after_request(response):

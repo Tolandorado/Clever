@@ -73,26 +73,29 @@ def api_create_post():
         print(ex)
         return failure("Что-то явно пошло не так, и я не знаю что именно!")
 
-@app.route("/api/post/list/random/<int:limit>", methods=["GET",])
-def api_get_list_of_posts_random_limited(limit):
+@app.route("/api/post/list/random/<int:limit>/<int:page>", methods=["GET"])
+def api_get_list_of_posts_random_limited(limit, page):
     try:
-        if limit < 0:
-            return failure("Лимит постов не может быть меньше нуля")
+        if limit <= 0:
+            return failure("Лимит постов должен быть больше нуля")
+        if page < 0:
+            return failure("Номер страницы не может быть меньше нуля")
 
         response = []
-        posts = []
+        posts = session.get('random_posts_list', [])
+        if not posts:  # Проверка на пустой список
+            for table in ALLOWED_TYPES.values():
+                posts += db.session.query(table).all()
 
-        for table in ALLOWED_TYPES.values():
-            posts += db.session.query(table).all()
-        
-        print(posts)
+        if page >= len(posts) // limit:
+            return failure("Такой страницы не существует")
 
-        for i in range(limit):
-            if len(posts) == 0:
-                break
-            index = random.randint(0, len(posts))
-            post = posts[index]
-            posts.pop(index)
+        page_start = page * limit
+        page_end = page_start + limit
+        if page_end > len(posts):
+            page_end = len(posts)
+
+        for post in posts[page_start:page_end]:
             response.append({
                 "postName": post.postName,
                 "postingTime": post.postingTime,
@@ -103,12 +106,9 @@ def api_get_list_of_posts_random_limited(limit):
                 "id": post.id,
             })
 
-
         return success(response)
-
-    except Exception as ex:
-        print(ex)
-        return failure("Вот прям совсем никак не обрабатывается")
+    except Exception as e:
+        return failure(str(e))
 
 @app.route("/api/post/list/<int:limit>", methods=["GET",])
 def api_get_list_of_posts_limited(limit):
