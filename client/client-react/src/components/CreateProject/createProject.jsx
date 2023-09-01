@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../AuthContext";
 import axios from "axios";
 import { ButtonToMain } from "../ButtonToMain/buttonToMain";
@@ -7,7 +7,7 @@ import styles from "./create-project.module.scss"
   export const CreateProject = () => {
     const [postName, setPostName] = useState("");
     const [description, setDescription] = useState("");
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedImg, setSelectedImg] = useState([]);
     const [selectedVector, setSelectedVector] = useState("");
     const {username, userId} = useContext(AuthContext);
 
@@ -22,64 +22,73 @@ import styles from "./create-project.module.scss"
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
+    setSelectedImg(e.target.files[0]);
+    console.log("dasdd",selectedImg);
   };
+  
 
   const handleVectorChange = (e) => {
     setSelectedVector(e.target.value);
   };
 
-  const IMG = new FormData();
-  IMG.append('image', selectedFile);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const currentTime = new Date();
     const postingTime = currentTime.toLocaleDateString().slice(0);
-    const requestData = {
-      postName,
-      postingTime,
-      authorName: username,
-      authorId: userId,
-      selectedVector,
-      selectedFile: IMG,
-      typeOf: "projects",
-      content: {
-        description,
-        mediaContent: {
-          selectedFile,
-        }
-      }
-    };   
+    // const formData = new FormData();
+    //     formData.append("image", selectedImg);
+    //     console.log("содержимое изображения", formData.get("image"))
+    
+    
+
+    // const requestData = {
+    //   postName,
+    //   postingTime,
+    //   authorName: username,
+    //   authorId: userId,
+    //   selectedVector,
+    //   typeOf: "projects",
+    // formData,
+    //   content: {
+    //     description,
+    //     // mediaContent: {
+    //     //     selectedFile: formData,
+    //     // }
+    //   }
+    // };   
 
     const formData = new FormData();
-    formData.append('postName', requestData.postName);
-    formData.append('postingTime', requestData.postingTime);
-    formData.append('authorName', requestData.authorName);
-    formData.append('authorId', requestData.authorId);
-    formData.append('selectedVector', requestData.selectedVector);
-    formData.append('selectedFile', requestData.selectedFile);
-    formData.append('typeOf', requestData.typeOf);
-    formData.append('content[description]', requestData.content.description);
-    formData.append('content[mediaContent][selectedFile]', requestData.content.mediaContent.selectedFile);
+formData.append("image", selectedImg);
+formData.append("postName", postName);
+formData.append("postingTime", postingTime);
+formData.append("authorName", username);
+formData.append("authorId", userId);
+formData.append("selectedVector", selectedVector);
+formData.append("typeOf", "projects");
+formData.append("content[description]", description);
 
     try {
-      const response = await axios.post("http://192.168.1.132:5001/api/post/create", formData, {
+      const response = await axios.post("http://192.168.1.132:5001/api/test", formData, {
         headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+          'Content-Type': 'multipart/form-data'
+        }
       });
       console.log("Ответ с сервера", response.data);
+      console.log("содержимое изображения", formData.get("image"))
+      console.log("Создан проект:", formData);
+      console.log("FormData", formData.get("image"));
     } catch(error) {
       console.error("Ошибка запроса", error);
     }
     
-    console.log("Создан проект:", requestData);
+    
+
 
     setPostName("");
     setDescription("");
-    setSelectedFile(null);
+    // setSelectedImg(null);
     setSelectedVector("");
   };
 
