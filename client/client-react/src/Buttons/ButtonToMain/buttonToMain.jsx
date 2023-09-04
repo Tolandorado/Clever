@@ -5,7 +5,7 @@ import styles from './button-to-main.module.scss'
 export const ButtonToMain = () => {
     return (
         <div>
-            <NavLink to="/" className={styles.buttonToMain}>Назад</NavLink>
+            <NavLink to="/" className={styles.button}>Назад</NavLink>
         </div>
     )
 }

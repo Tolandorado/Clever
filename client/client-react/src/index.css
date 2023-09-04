@@ -6,6 +6,34 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #0c1611;
+  background-image: url(../images/forest.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  backdrop-filter: blur(5px) brightness(50%);
+}
+
+h1,h2,h3,h4 {
+  margin: 0%;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  position: relative;
+}
+
+select::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px; /* Измените значение ширины отступа справа по вашему усмотрению */
+  height: 100%;
+  pointer-events: none;
+  /* Дополнительные стили */
 }
 
 code {
