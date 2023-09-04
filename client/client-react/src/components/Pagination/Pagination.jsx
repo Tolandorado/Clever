@@ -4,23 +4,39 @@ import styles from "./Pagination.module.scss";
 import { Link } from "react-router-dom";
 
 export const Pagination = () => {
+  const [pages, setPages] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
   const [posts, setPosts] = useState([]);
   const [fetching, setFetching] = useState(true);
+  const [totalCount, setTotalCount] = useState(0)
 
   useEffect(() => {
     if (fetching) {
-      axios
-        .get("https://jsonplaceholder.typicode.com/posts")
-        .then((response) => {
-          setPosts(response.data);
-          setFetching(false);
+        console.log('fetching')
+        axios.get(`https://jsonplaceholder.typicode.com/photos?_limit=40&_page=${currentPage}`) 
+        .then(response => {
+            setPages([...pages, ...response.data])
+            setCurrentPage(prevState => prevState + 1) 
+            setTotalCount(response.headers['x-total-count']) 
         })
-        .catch((error) => {
-          console.log("Error fetching posts:", error);
-          setFetching(false);
-        });
-    }
-  }, [fetching]);
+        .finally( () => setFetching(false));
+}
+}, [fetching])
+
+useEffect(()=> {
+    document.addEventListener('scroll', scrollHandler)
+    return function() {
+        document.removeEventListener('scroll', scrollHandler)
+    };
+
+}, [totalCount])
+
+const scrollHandler = (e) => {
+    if (e.target.documentElement.scrollHeight - ( e.target.documentElement.scrollTop + window.innerHeight) < 100 
+    && pages.length < totalCount) {
+        setFetching(true)
+    }    
+}
 
   return (
     <div className={styles.container}>
