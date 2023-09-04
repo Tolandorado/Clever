@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../AuthContext";
 import axios from "axios";
-import { ButtonToMain } from "../ButtonToMain/buttonToMain";
+import { ButtonToMain } from "../../Buttons/ButtonToMain/buttonToMain";
 import styles from "./create-project.module.scss"
 
   export const CreateProject = () => {
@@ -95,10 +95,10 @@ formData.append("content[description]", description);
   return (
     <div >
       <ButtonToMain/>
-      <h1>Создание проекта</h1>
+      <h1 className={styles.form_title}>Создание проекта</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <label>
-          Vector:
+          Направление:
           <select className={styles.form_submit} value={selectedVector} onChange={handleVectorChange}>
             <option value="">Обязательно</option>
             <option value="Science">Science</option>

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../../AuthContext";
 import axios from "axios";
-import { ButtonToMain } from "../ButtonToMain/buttonToMain";
+import { ButtonToMain } from "../../Buttons/ButtonToMain/buttonToMain";
 import styles from './create-event.module.scss';
 
 export const CreateEvent = () => {
@@ -67,12 +67,12 @@ export const CreateEvent = () => {
     
     <div >
     <ButtonToMain/>
-    <h1>Создание мероприятия</h1>
+    <h1 className={styles.form_title}>Создание мероприятия</h1>
     <form onSubmit={handleSubmit} className={styles.form}>
       <label>
-        Vector:
+      Направление:
         <select className={styles.form_submit} value={selectedVector} onChange={handleVectorChange}>
-          <option value="">Select Vector</option>
+          <option value="">Обязательно</option>
           <option value="Science">Science</option>
           <option value="Sport">Sport</option>
           <option value="Nature">Nature</option>
@@ -81,7 +81,7 @@ export const CreateEvent = () => {
       </label>
       <br />
       <label className={styles.form_label}>
-        Event Name:
+      Название публикации:
         <input
           className={styles.form_input}
           type="text"
@@ -91,7 +91,7 @@ export const CreateEvent = () => {
       </label>
       <br />
       <label className={styles.form_label}>
-        Event Description:
+      Содержимое публикации:
         <br />
         <textarea
           className={styles.form_input}

@@ -1,0 +1,28 @@
+* {
+  text-decoration: none;
+  margin: 0;  
+  
+}
+
+$backgroundImage:url('../images/forest.jpg');
+
+// background-color: #0c1611;
+// background-image: $backgroundImage;
+// background-repeat: no-repeat;
+// background-size: cover;
+// background-attachment: fixed;
+// filter: blur(5px) brightness(90%);
+
+
+
+.app_header {
+  // background-color: #0c1611;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  width: 100%;
+}

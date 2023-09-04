@@ -33,12 +33,8 @@ export const Registration = () => {
         );
         if (response.status === 200 && response.data["response-suc"] === true) {
           setIsReg(true);
-
           console.log(response);
-
           console.log("Данные пользователя при регистрации:", username, password, userId);
-
-
         } else {
           console.log(response)
         }

@@ -1,8 +1,8 @@
-import './App.css';
+import styles from './App.module.scss';
 import { RoutesMain } from './components/Routes/routes';
 import { Wrapper } from './components/Wrapper/wrapper';
-import { useState } from 'react';
-import { AuthContext, AuthProvider } from './AuthContext';
+import { AuthProvider } from './AuthContext';
+
 
 const App = () => {
 
@@ -12,7 +12,7 @@ const App = () => {
     <AuthProvider>
 
       <Wrapper>
-      <header className="App-header">
+      <header className={styles.app_header}>
        <RoutesMain />
       </header>
       </Wrapper>

@@ -1,9 +1,25 @@
-.container {
+.container  {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100rem;
-    height: 100%;
-    background-color: aquamarine;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    width: 60vw;
+    height: 100vh;
+}
+
+.navigation {
+    background-color: #0c1611;
+    margin-right: 2rem;
+    width: 15vw;
+    // height: 20vh;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgb(0, 110, 81);
+    letter-spacing: 1px;
+    display: block;
+
 }
