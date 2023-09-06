@@ -24,6 +24,7 @@ export const Main = () => {
      <PostCreate/>
      </div>
     <div className={styles.wrapper}>   
+    
       <Posts/>
     </div>  
     </div>
