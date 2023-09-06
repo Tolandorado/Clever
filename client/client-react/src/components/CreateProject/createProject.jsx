@@ -21,8 +21,9 @@ import styles from "./create-project.module.scss"
     setDescription(e.target.value);
   };
 
-  const handleFileChange = (e) => {
-    setSelectedImg(e.target.files[0]);
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedImg(file)
     console.log("dasdd",selectedImg);
   };
   
@@ -58,7 +59,9 @@ import styles from "./create-project.module.scss"
     //     // }
     //   }
     // };   
-
+    const content = {
+      description: description,
+    };
     const formData = new FormData();
 formData.append("image", selectedImg);
 formData.append("postName", postName);
@@ -67,10 +70,11 @@ formData.append("authorName", username);
 formData.append("authorId", userId);
 formData.append("selectedVector", selectedVector);
 formData.append("typeOf", "projects");
-formData.append("content[description]", description);
+formData.append('content', JSON.stringify(content));
+
 
     try {
-      const response = await axios.post("http://192.168.1.132:5001/api/test", formData, {
+      const response = await axios.post("http://192.168.1.132:5001/api/post/create", formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -79,6 +83,9 @@ formData.append("content[description]", description);
       console.log("содержимое изображения", formData.get("image"))
       console.log("Создан проект:", formData);
       console.log("FormData", formData.get("image"));
+      for (const entry of formData.entries()) {
+        console.log(entry[0] + ':', entry[1]);
+      }
     } catch(error) {
       console.error("Ошибка запроса", error);
     }

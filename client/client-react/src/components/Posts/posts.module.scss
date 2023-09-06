@@ -1,7 +1,14 @@
 .container {
-    display: flex;
+    display:flex;
+    align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
+}
 
-    width: 100vw;
-  
+.page {
+    width: 300px;
+    height: 500px;
+    margin-bottom: 20px;
+    background-color: black;
 }

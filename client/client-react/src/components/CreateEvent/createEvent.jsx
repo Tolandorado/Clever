@@ -6,10 +6,12 @@ import styles from './create-event.module.scss';
 
 export const CreateEvent = () => {
   const [postName, setPostName] = useState("");
-  const [description, setDescription] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedVector, setSelectedVector] = useState("");
-  const {username, userId} = useContext(AuthContext);
+    const [description, setDescription] = useState("");
+    const [selectedImg, setSelectedImg] = useState([]);
+    const [selectedVector, setSelectedVector] = useState("");
+    const {username, userId} = useContext(AuthContext);
+
+  
 
   const handleEventNameChange = (e) => {
     setPostName(e.target.value);
@@ -20,51 +22,59 @@ export const CreateEvent = () => {
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
+    setSelectedImg(e.target.files[0]);
+    console.log("dasdd",selectedImg);
   };
+  
 
   const handleVectorChange = (e) => {
     setSelectedVector(e.target.value);
   };
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const currentTime = new Date();
     const postingTime = currentTime.toLocaleDateString().slice(0);
-    const requestData = {
-      postName,
-      postingTime,
-      authorName: username,
-      authorId: userId,
-      selectedVector,
-      typeOf: "activities",
-      content: {
-        description,
-        mediaContent: {
-          selectedFile,
-        }
-      }
+
+    const content = {
+      description: description,
     };
+    const formData = new FormData();
+formData.append("image", selectedImg);
+formData.append("postName", postName);
+formData.append("postingTime", postingTime);
+formData.append("authorName", username);
+formData.append("authorId", userId);
+formData.append("selectedVector", selectedVector);
+formData.append("typeOf", "activities");
+formData.append('content', JSON.stringify(content));
 
     try {
-      const response = await axios.post("http://192.168.1.132:5001/api/post/create", requestData);
-      console.log("Ответ с сервера", response);
+      const response = await axios.post("http://192.168.1.132:5001/api/post/create", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log("Ответ с сервера", response.data);
+      console.log("содержимое изображения", formData.get("image"))
+      console.log("Создан проект:", formData);
+      console.log("FormData", formData.get("image"));
+      for (const entry of formData.entries()) {
+        console.log(entry[0] + ':', entry[1]);
+      }
     } catch(error) {
       console.error("Ошибка запроса", error);
     }
 
-    console.log("Создано мероприятие:", requestData);
-
     setPostName("");
     setDescription("");
-    setSelectedFile(null);
+    // setSelectedImg(null);
     setSelectedVector("");
   };
 
   return (
-    
-    
     <div >
     <ButtonToMain/>
     <h1 className={styles.form_title}>Создание мероприятия</h1>

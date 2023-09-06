@@ -22,7 +22,7 @@ export const Login = () => {
 
       try {
         const response = await axios.post(
-          "http://192.168.1.135:5001/api/users/verify",               
+          "http://192.168.1.132:5000/api/users/verify",               
           {
             username: username,
             password: password,
@@ -30,10 +30,10 @@ export const Login = () => {
         );
 
         if (response.status === 200 && response.data["response-suc"] === true) {
+          const data = response.data;
           setIsLoggedIn(true);
-          setUserId(response.data.id)
-          console.log(response);
-
+          setUserId(data.id)
+          console.log("ответ с сервера", userId);
           console.log("Данные пользователя при авторизации:", username, password, userId);
 
         } else {
