@@ -1,7 +1,10 @@
 from models import *
-from storage import write_post, read_post, delete_post
+from storage import write_post, read_post, delete_post, get_image
 
 import random
+import base64
+import pickle
+from pprint import pprint
 
 
 def failure(message = None):
@@ -10,16 +13,46 @@ def failure(message = None):
         "message": message,
     })
 
-def success(data = None):
-    return jsonify({
+def success(data = None, *, x_total_count=False):
+    _data = jsonify({
         "response-suc": True,
         "data": data,
     })
+
+    if x_total_count:
+        _data.headers["X-Total-Count"] = len(data)
+
+    return _data
+
+@app.route("/api/test", methods=["POST",])
+def api_test():
+    post_name = request.form['postName']
+    posting_time = request.form['postingTime']
+    author_name = request.form['authorName']
+    author_id = request.form['authorId']
+    selected_vector = request.form['selectedVector']
+    description = request.form.get('content[description]')
+
+    # Обработка полей формы
+    # ...
+    print(request.files)
+
+    # Обработка файлов из FormData
+    if 'image' in request.files:
+        file = request.files['image']
+        print("РАБОТАЕТ")
+    else: print("НЕ РАБОТАЕТ")
+
+    return jsonify({"response-suc":True})
 
 @app.route("/api/post/create", methods=["POST",])
 def api_create_post():
     try:
         try:
+            pprint(request.get_json())
+            image = request.files['image']
+            print("\033[31m",image,"\033[0m")
+
             # Получаем аргументы из запроса
             post_name = request.form.get("postName")
             posting_time = request.form.get("postingTime")
@@ -91,7 +124,6 @@ def api_create_post():
         # Подтверждаем изменения в базе данных
         db.session.commit()
         return success()
-
     except Exception as ex:
         print(ex)
         return failure("Что-то явно пошло не так, и я не знаю что именно!")

@@ -32,6 +32,7 @@ class BasePost(db.Model):
     authorId = db.Column(db.String(50), nullable=False)
     vector = db.Column(db.String(50), nullable=False)
     type = db.Column(db.String(50), nullable=True)
+    #image = db.Column(db.LargeBinary, nullable=False)
 
     def __repr__(self):
         return f"<Post v:{self.vector} t:{self.type} i:{self.id}>"
