@@ -49,15 +49,11 @@ def api_test():
 def api_create_post():
     try:
         try:
-            pprint(request.get_json())
-            image = request.files['image']
-            print("\033[31m",image,"\033[0m")
-
             # Получаем аргументы из запроса
             post_name = request.form.get("postName")
             posting_time = request.form.get("postingTime")
             author_name = request.form.get("authorName")
-            author_id = request.foem.get("authorId")
+            author_id = request.form.get("authorId")
             vector = request.form.get("selectedVector")
             type_of = request.form.get("typeOf")
             content = request.form.get("content")
@@ -174,6 +170,7 @@ def api_get_list_of_posts_random_limited(limit, page):
                 "vector": post.vector,
                 "type": post.type,
                 "id": post.postId,
+                "imageURL": f"{BASE_URL}/post/preview/{post.postId}",
             })
 
         response = jsonify({"post-list": posts, "x-total-count": len(posts_list)})
@@ -196,6 +193,7 @@ def api_get_list_of_all_posts():
                     "vector": post.vector,
                     "type": post.type,
                     "id": post.postId,
+                    "imageURL": f"{BASE_URL}/post/preview/{post.postId}",
                 })
         return success(response)
 
@@ -233,7 +231,8 @@ def api_get_post():
             "authorId": post.authorId,
             "vector": post.vector,
             "type": post.type,
-            "id": post.id,
+            "id": post.postId,
+            "imageURL": f"{BASE_URL}/post/preview/{post.postId}"
         }
 
         # А тут ищем уже сам пост

@@ -13,6 +13,7 @@ app.config["SECRET_KEY"] = "awaf11uhuieiudnuiqdh"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+BASE_URL = "http://127.0.0.1:5000/api"
 
 @app.after_request
 def after_request(response):
