@@ -173,7 +173,7 @@ def api_get_list_of_posts_random_limited(limit, page):
                 "imageURL": f"{BASE_URL}/post/preview/{post.postId}",
             })
 
-        response = jsonify({"post-list": posts, "x-total-count": len(posts_list)})
+        response = jsonify({"data": posts, "x-total-count": len(posts_list)})
         return response
     except Exception as e:
         return failure(str(e))
@@ -195,7 +195,8 @@ def api_get_list_of_all_posts():
                     "id": post.postId,
                     "imageURL": f"{BASE_URL}/post/preview/{post.postId}",
                 })
-        return success(response)
+        random.shuffle(response)
+        return jsonify(response)
 
     except Exception as ex:
         print(ex)
