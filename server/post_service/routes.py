@@ -21,21 +21,34 @@ def api_create_post():
     try:
         try:
             # Получаем аргументы из запроса
-            post_name = request.json.get("postName")
-            posting_time = request.json.get("postingTime")
-            author_name = request.json.get("authorName")
-            author_id = request.json.get("authorId")
-            vector = request.json.get("selectedVector")
-            type = request.json.get("typeOf")
-            content = request.json.get("content")
+            post_name = request.form.get("postName")
+            posting_time = request.form.get("postingTime")
+            author_name = request.form.get("authorName")
+            author_id = request.foem.get("authorId")
+            vector = request.form.get("selectedVector")
+            type_of = request.form.get("typeOf")
+            content = request.form.get("content")
+
+            image = None
+            if 'image' in request.files:
+                image = request.files['image']
+            else:
+                print("Нет фотографии")
+                return failure("Отсутствует фотография")
+
+
+            check = [post_name, posting_time, author_name, author_id, vector, type_of, content]
+            if None in check:
+                print(check)
+                return failure("Что-то пусто")
         except Exception as ex:
             print(ex)
             return failure(f"Не удалось прочитать данные в запросе ({request.json})")
 
         # Проверяем/получаем нужную таблицу
-        table = get_table_by_type(type)
+        table = get_table_by_type(type_of)
         if table is None:
-            return failure(f"Типа {type} не существует")
+            return failure(f"Типа {type_of} не существует")
 
         # Создаём экземпляр записи в таблице
         post: BasePost = table()
@@ -46,24 +59,34 @@ def api_create_post():
             post.authorName = author_name
             post.postName = post_name
             post.postingTime = posting_time
-            post.type = type
+            post.type = type_of
             post.vector = vector
 
             # Пытаемся записать данные в таблицу
             db.session.add(post)
             db.session.flush()
+        
+            post.postId = type_of[0].lower() + str(post.id)
         except Exception as ex:
             print(ex)
             db.session.rollback()
             return failure("Не удалось произвести запись в базу данных")
-
+        
         # Прежде чем подтверждать запись в БД, нужно записать контент в файловую систему
         try:
-            write_post(type, post.id, content)
+            write_post(type_of, post.postId, content)
         except Exception as ex:
             print(ex)
             db.session.rollback()
             return failure("Не получилось сохранить контент поста")
+
+        # Теперь сохраняем превьюшку
+        try:
+            image.save(f"../../previews/{post.postId}.jpg")
+        except Exception as ex:
+            print(ex)
+            db.session.rollback()
+            return failure("Не получилось сохранить изображение")
 
         # Подтверждаем изменения в базе данных
         db.session.commit()
@@ -73,6 +96,19 @@ def api_create_post():
         print(ex)
         return failure("Что-то явно пошло не так, и я не знаю что именно!")
 
+@app.route("/api/post/preview/<string:post_id>")
+def api_get_preview(post_id):
+    return send_file(f"../../previews/{post_id}.jpg", mimetype="image/jpeg")
+
+@app.route("/api/post/refresh")
+def api_refresh():
+    posts = []
+    for table in ALLOWED_TYPES.values():
+        posts += db.session.query(table).all()
+    random.shuffle(posts)
+    session['random_posts_list'] = posts
+    return success()
+
 @app.route("/api/post/list/random/<int:limit>/<int:page>", methods=["GET"])
 def api_get_list_of_posts_random_limited(limit, page):
     try:
@@ -80,65 +116,38 @@ def api_get_list_of_posts_random_limited(limit, page):
             return failure("Лимит постов должен быть больше нуля")
         if page < 0:
             return failure("Номер страницы не может быть меньше нуля")
+        page -= 1
 
-        response = []
-        posts = session.get('random_posts_list', [])
-        if not posts:  # Проверка на пустой список
-            for table in ALLOWED_TYPES.values():
-                posts += db.session.query(table).all()
+        posts = []
+        posts_list = session.get('random_posts_list', None)
 
-        if page >= len(posts) // limit:
+        if posts_list is None:
+            return failure("Обновите список")
+
+        if page >= len(posts_list) / limit:
+            print(f"page: {page} len-posts: {len(posts)} limit: {limit}")
             return failure("Такой страницы не существует")
 
         page_start = page * limit
         page_end = page_start + limit
-        if page_end > len(posts):
-            page_end = len(posts)
+        if page_end > len(posts_list):
+            page_end = len(posts_list)
 
-        for post in posts[page_start:page_end]:
-            response.append({
+        for post in posts_list[page_start:page_end]:
+            posts.append({
                 "postName": post.postName,
                 "postingTime": post.postingTime,
                 "authorName": post.authorName,
                 "authorId": post.authorId,
                 "vector": post.vector,
                 "type": post.type,
-                "id": post.id,
+                "id": post.postId,
             })
 
-        return success(response)
+        response = jsonify({"post-list": posts, "x-total-count": len(posts_list)})
+        return response
     except Exception as e:
         return failure(str(e))
-
-@app.route("/api/post/list/<int:limit>", methods=["GET",])
-def api_get_list_of_posts_limited(limit):
-    try:
-        if limit < 0:
-            return failure("Лимит постов не может быть меньше нуля")
-
-        response = []
-        for table in ALLOWED_TYPES.values():
-            posts = db.session.query(table).all()
-            for post in posts:
-                response.append({
-                    "postName": post.postName,
-                    "postingTime": post.postingTime,
-                    "authorName": post.authorName,
-                    "authorId": post.authorId,
-                    "vector": post.vector,
-                    "type": post.type,
-                    "id": post.id,
-                })
-                if len(response) >= limit:
-                    break
-            if len(response) >= limit:
-                    break
-        return success(response)
-
-    except Exception as ex:
-        print(ex)
-        return failure("Вот прям совсем никак не обрабатывается")
-
 
 @app.route("/api/post/list/all", methods=["GET",])
 def api_get_list_of_all_posts():
@@ -154,59 +163,13 @@ def api_get_list_of_all_posts():
                     "authorId": post.authorId,
                     "vector": post.vector,
                     "type": post.type,
-                    "id": post.id,
+                    "id": post.postId,
                 })
         return success(response)
 
     except Exception as ex:
         print(ex)
         return failure("Вот прям совсем никак не обрабатывается")
-
-@app.route("/api/post/list", methods=["GET",])
-def api_get_list_of_posts():
-    try:
-        try:
-            # Получаем аргументы
-            vectors = request.json.get("vectors")
-            types = request.json.get("types")
-        except Exception as ex:
-            print(ex)
-            return failure("Не вышло прочесть аргументы")
-
-        # О, а вот тут будет храниться ответ =)
-        response = []
-
-        # Теперь банальным перебором будем вытаскивать записи из таблицы
-        for type in types:
-            # Получаем таблицу
-            table = get_table_by_type(type)
-            
-            # Я тут так подумал, что список может быть и пустым, так что не страшно
-            if table is None:
-                continue
-
-            # Теперь смотрим на вектора
-            for vector in vectors:
-                # Обращаемся к базе данных и вытягиваем необходимые нам записи
-                post_list = db.session.query(table).filter_by(vector=vector).all()
-
-                # Опять-таки при помощи банального перебора обрабатываем полученный список
-                for post in post_list:
-                    response.append({
-                        "postName": post.postName,
-                        "postingTime": post.postingTime,
-                        "authorName": post.authorName,
-                        "authorId": post.authorId,
-                        "vector": post.vector,
-                        "type": post.type,
-                        "id": post.id,
-                    })
-
-            return success(response)
-
-    except Exception as ex:
-        print(ex)
-        return failure("Произошло что-то немыслемое и необъяснимое, поэтому я не знаю причину ошибки")
 
 @app.route("/api/post/get", methods=["GET",])
 def api_get_post():
@@ -225,7 +188,7 @@ def api_get_post():
             return failure(f"Типа {type} не существует")
         
         try:
-            post = db.session.query(table).filter_by(id=int(id)).one()
+            post = db.session.query(table).filter_by(postId=int(id)).one()
         except Exception as ex:
             print(ex)
             return failure(f"Запись с id {id} не найдена")
@@ -273,7 +236,7 @@ def api_update_post():
             return failure(f"Типа {type} не существует")
         
         try:
-            post: BasePost = db.session.query(table).filter_by(id=id).one()
+            post: BasePost = db.session.query(table).filter_by(postId=id).one()
         except Exception as ex:
             print(ex)
             return failure(f"Запись с id {id} не найдена")
@@ -319,7 +282,7 @@ def api_delete_post():
             return failure(f"Типа {type} не существует")
 
         try:
-            db.session.query(table).filter_by(id=id).delete()
+            db.session.query(table).filter_by(postId=id).delete()
             db.session.flush()
         except Exception as ex:
             print(ex)

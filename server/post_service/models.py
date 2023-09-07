@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_session import Session
@@ -25,6 +25,7 @@ class BasePost(db.Model):
     __abstract__ = True
 
     id = db.Column(db.Integer, primary_key=True)
+    postId = db.Column(db.String(50), unique=True)
     postName = db.Column(db.String(200), nullable=False)
     postingTime = db.Column(db.String(20), nullable=False)
     authorName = db.Column(db.String(200), nullable=False)
