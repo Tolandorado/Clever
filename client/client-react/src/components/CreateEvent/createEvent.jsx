@@ -3,6 +3,7 @@ import { AuthContext } from "../../AuthContext";
 import axios from "axios";
 import { ButtonToMain } from "../../Buttons/ButtonToMain/buttonToMain";
 import styles from './create-event.module.scss';
+import API_URL from "../../api.config";
 
 export const CreateEvent = () => {
   const [postName, setPostName] = useState("");
@@ -52,15 +53,15 @@ formData.append("typeOf", "activities");
 formData.append('content', JSON.stringify(content));
 
     try {
-      const response = await axios.post("http://192.168.1.132:5001/api/post/create", formData, {
+      const response = await axios.post(`${API_URL}:5000/api/post/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log("Ответ с сервера", response.data);
-      console.log("содержимое изображения", formData.get("image"))
-      console.log("Создан проект:", formData);
-      console.log("FormData", formData.get("image"));
+      // console.log("Ответ с сервера", response.data);
+      // console.log("содержимое изображения", formData.get("image"))
+      // console.log("Создан проект:", formData);
+      // console.log("FormData", formData.get("image"));
       for (const entry of formData.entries()) {
         console.log(entry[0] + ':', entry[1]);
       }
@@ -68,10 +69,10 @@ formData.append('content', JSON.stringify(content));
       console.error("Ошибка запроса", error);
     }
 
-    setPostName("");
-    setDescription("");
-    // setSelectedImg(null);
-    setSelectedVector("");
+    // setPostName("");
+    // setDescription("");
+    // // setSelectedImg(null);
+    // setSelectedVector(""); // убрать из комментария
   };
 
   return (

@@ -3,6 +3,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
 import styles from "./registration.module.scss";
+import API_URL from "../../api.config";
 
 export const Registration = () => {
   const [isReg, setIsReg] = useState(false);
@@ -25,7 +26,7 @@ export const Registration = () => {
       event.preventDefault();
       try {
         const response = await axios.post(
-          "http://192.168.1.132:5000/api/users/create",
+          `${API_URL}:5001/api/users/create`,
           {
             username: username,
             password: password,

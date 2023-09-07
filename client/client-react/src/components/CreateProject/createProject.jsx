@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../AuthContext";
 import axios from "axios";
 import { ButtonToMain } from "../../Buttons/ButtonToMain/buttonToMain";
-import styles from "./create-project.module.scss"
+import styles from "./create-project.module.scss";
+import API_URL from "../../api.config";
 
   export const CreateProject = () => {
     const [postName, setPostName] = useState("");
@@ -74,7 +75,7 @@ formData.append('content', JSON.stringify(content));
 
 
     try {
-      const response = await axios.post("http://192.168.1.132:5001/api/post/create", formData, {
+      const response = await axios.post(`${API_URL}:5000/api/post/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -93,10 +94,10 @@ formData.append('content', JSON.stringify(content));
     
 
 
-    setPostName("");
-    setDescription("");
-    // setSelectedImg(null);
-    setSelectedVector("");
+     // setPostName("");
+    // setDescription("");
+    // // setSelectedImg(null);
+    // setSelectedVector(""); // убрать из комментария
   };
 
   return (

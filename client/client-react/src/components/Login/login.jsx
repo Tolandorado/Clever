@@ -3,6 +3,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
 import styles from "./login.module.scss";
+import API_URL from "../../api.config";
 
 export const Login = () => {
   const {
@@ -22,7 +23,7 @@ export const Login = () => {
 
       try {
         const response = await axios.post(
-          "http://192.168.0.104:5000/api/users/verify",               
+          `${API_URL}:5001/api/users/verify`,               
           {
             username: username,
             password: password,
