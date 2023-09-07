@@ -49,15 +49,13 @@ def api_test():
 def api_create_post():
     try:
         try:
-            pprint(request.get_json())
-            image = request.files['image']
-            print("\033[31m",image,"\033[0m")
+        
 
             # Получаем аргументы из запроса
             post_name = request.form.get("postName")
             posting_time = request.form.get("postingTime")
             author_name = request.form.get("authorName")
-            author_id = request.foem.get("authorId")
+            author_id = request.form.get("authorId")
             vector = request.form.get("selectedVector")
             type_of = request.form.get("typeOf")
             content = request.form.get("content")
@@ -115,7 +113,7 @@ def api_create_post():
 
         # Теперь сохраняем превьюшку
         try:
-            image.save(f"../../previews/{post.postId}.jpg")
+            image.save(f"previews/{post.postId}.jpg")
         except Exception as ex:
             print(ex)
             db.session.rollback()
@@ -174,6 +172,7 @@ def api_get_list_of_posts_random_limited(limit, page):
                 "vector": post.vector,
                 "type": post.type,
                 "id": post.postId,
+            
             })
 
         response = jsonify({"post-list": posts, "x-total-count": len(posts_list)})
@@ -197,7 +196,8 @@ def api_get_list_of_all_posts():
                     "type": post.type,
                     "id": post.postId,
                 })
-        return success(response)
+        random.shuffle(response)        
+        return jsonify(response)
 
     except Exception as ex:
         print(ex)
