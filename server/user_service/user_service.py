@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://klever:1@213.59.167.213:5432/users" # Я использую sqlite для теста
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Users.db" # Я использую sqlite для теста
 db = SQLAlchemy(app)
 
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -138,6 +138,3 @@ def verify_user():
             "correct": False if user is None or user.password != password else True,
             "id": user.user_id if user is not None and user.password == password else None
         })
-
-if __name__ == "__main__":
-    app.run("0.0.0.0", 5000, debug=True)

@@ -15,3 +15,9 @@ def read_post(type: str, id: int):
 
 def delete_post(type: str, id: int):
     os.remove(f"{type}/{id}.json")
+
+def get_image(type: str, id: int):
+    content = None
+    with open(f"{type}/{id}.json", "r") as content_file:
+        content = json.loads(content_file.read())
+    return content["mediaContent"]["selectedFile"]
