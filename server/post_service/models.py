@@ -56,4 +56,6 @@ ALLOWED_TYPES = {
 
 def get_table_by_type(type: str):
     return ALLOWED_TYPES.get(type, None)
+
+BASE_URL = "http://192.168.0.104:5000/api"
     

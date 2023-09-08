@@ -195,6 +195,7 @@ def api_get_list_of_all_posts():
                     "vector": post.vector,
                     "type": post.type,
                     "id": post.postId,
+                    "imageURL": f"{BASE_URL}/post/preview/{post.postId}",
                 })
         random.shuffle(response)        
         return jsonify(response)
@@ -203,16 +204,12 @@ def api_get_list_of_all_posts():
         print(ex)
         return failure("Вот прям совсем никак не обрабатывается")
 
-@app.route("/api/post/get", methods=["GET",])
-def api_get_post():
+@app.route("/api/post/get/<string:id>", methods=["GET",])
+def api_get_post_only_URL(id):
     try:
-        try:
-            # Получаем аргументы (опять)
-            type = request.json.get("typeOf")
-            id = request.json.get("postId")
-        except Exception as ex:
-            print(ex)
-            return failure("Не получается прочесть аргументы")
+        type = ''
+        if id.startswith('a'): type = "activities"
+        elif id.startswith('p'): type = "projects"
 
         # Получение информации о посте и проверка на существование
         table = get_table_by_type(type)
@@ -220,7 +217,7 @@ def api_get_post():
             return failure(f"Типа {type} не существует")
         
         try:
-            post = db.session.query(table).filter_by(postId=int(id)).one()
+            post = db.session.query(table).filter_by(postId=id).one()
         except Exception as ex:
             print(ex)
             return failure(f"Запись с id {id} не найдена")
@@ -233,7 +230,8 @@ def api_get_post():
             "authorId": post.authorId,
             "vector": post.vector,
             "type": post.type,
-            "id": post.id,
+            "id": post.postId,
+            "imageURL": f"{BASE_URL}/post/preview/{post.postId}"
         }
 
         # А тут ищем уже сам пост
@@ -244,7 +242,7 @@ def api_get_post():
             return failure("Не вышло прочесть содержимое поста")
         
         response["content"] = content
-        return success(response)
+        return jsonify(response)
 
     except Exception as ex:
         print(ex)

@@ -5,6 +5,7 @@ import { Posts } from "../Posts/posts";
 import { Registration } from "../Registration/registration";
 import { CreateEvent } from "../CreateEvent/createEvent";
 import { CreateProject } from "../CreateProject/createProject";
+import { PostPage } from "../PostPage/postPage"
 
 export const RoutesMain = () => {
   return (
@@ -15,6 +16,8 @@ export const RoutesMain = () => {
         <Route path="/reg" element={<Registration />} />
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/create-project" element={<CreateProject />} />
+        <Route path="/post/:id" element={<PostPage/>} />
+        <Route path="/post/post" element={<PostPage/>} />
         
       </Routes>
     </HashRouter>

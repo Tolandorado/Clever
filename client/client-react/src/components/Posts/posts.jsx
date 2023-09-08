@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState, useContext, useRef } from "react";
 import { AuthContext } from "../../AuthContext";
@@ -39,34 +39,7 @@ export const Posts = () => {
 }, [fetching])
 
 const filteredPages = pages.filter((item) => {
-  // if (selectedType === "all" && selectedVector === "all") {
-  //   // Если выбраны "all" для обоих атрибутов, не применяем фильтрацию
-  //   return true;
-  // } else if (selectedType === "all") {
-  //   switch (selectedVector) {
-  //     case "Sport":
-  //       return item.type === "Sport";
-  //     case "Scielce":
-  //       return item.type === "Scielce";
-  //     case "Nature":
-  //       return item.type === "Nature";
-  //     case "Religion":
-  //       return item.type === "Religion";
-  //     default:
-  //       return false;
-  //   }
-  // } else if (selectedVector === "all") {
-  //   switch (selectedType) {
-  //     case "all":
-  //       return true;
-  //     case "projects":
-  //       return item.type === "projects";
-  //     case "activities":
-  //       return item.type === "activities";
-  //     default:
-  //       return false;
-  //   }
-  // }
+ 
   switch (selectedType) {
         case "all":
           return true;
@@ -105,7 +78,7 @@ if (isLoaded === false) {
 
   return(
 <div className={styles.wrapper}>
-  <div>
+  <div className={styles.filter}>
    
      {/* Фильтр по типу */}
      <label>
@@ -131,7 +104,8 @@ if (isLoaded === false) {
   </div>
   <div className={styles.container}>
   {filteredAllPages.map(page => 
-    <div key={page.id} className={styles.page}>     
+    <NavLink to={`/post/${page.id}`} key={page.id}>
+      <div key={page.id} className={styles.page}>     
       <div className={styles.page_container}>
 
       <img src={page.imageURL} alt="photo" className={styles.page_image}/>
@@ -143,6 +117,7 @@ if (isLoaded === false) {
 
       </div>
     </div>
+    </NavLink>
     )}
   </div>
 </div> 

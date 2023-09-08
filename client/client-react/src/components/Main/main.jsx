@@ -4,10 +4,8 @@ import { AuthContext } from "../../AuthContext";
 import React, { useContext, useState, useEffect } from "react";
 import { Login } from "../Login/login";
 import { Posts } from "../Posts/posts";
-import axios from "axios";
 import { PostCreate } from "../../Buttons/PostCreate/postCreate";
 import { ButtonLogout } from "../../Buttons/ButtonLogout/buttonLogout";
-import { Pagination } from "../Pagination/Pagination";
 
 export const Main = () => {
   const { isLoggedIn} = useContext(AuthContext);
@@ -19,6 +17,7 @@ export const Main = () => {
 
   return (
 
+    
     <div className={styles.container}>
      <div className={styles.navigation}>
      <ButtonLogout/>

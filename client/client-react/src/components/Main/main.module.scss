@@ -2,17 +2,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
 }
 
 .wrapper {
     display: flex;
     justify-content: center;
     width: 60vw;
-    height: 100vh;
+    height: 100%;
     background-color: #0c1611;
 }
 
 .navigation {
+    position: sticky;
+    top: 20vh;
+    bottom: 20vh;
     background-color: #0c1611;
     margin-right: 2rem;
     width: 15vw;

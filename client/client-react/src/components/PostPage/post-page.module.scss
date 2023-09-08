@@ -1,0 +1,49 @@
+.container  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.title {
+    margin-bottom: 5px;
+    font-size: 3vw;
+}
+
+.author-name {
+    font-size: 1vw;
+    margin-right: 0.5vw;
+}
+
+.posting-time {
+    font-size: 1vw;
+}
+
+.page-meta {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    padding:0 2vw 0 2vw;
+    width: 50vw;
+    height: 100%;
+    background-color: #0c1611;
+    flex-direction: column;
+}
+
+.image {
+    width: 48vw;
+    object-fit: cover;
+    height: 500px;
+    padding-bottom: 5px;
+    border-radius: 6px;
+
+    &-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
