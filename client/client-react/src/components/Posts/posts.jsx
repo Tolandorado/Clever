@@ -10,30 +10,141 @@ import API_URL from "../../api.config";
 export const Posts = () => {
   const [pages, setPages] = useState([])
   const [fetching, setFetching] = useState(true)
- 
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [selectedType, setSelectedType] = useState("all");
+  const [selectedVector, setSelectedVector] = useState("all");
 
+  const handleTypeChange = (e) => {
+    setSelectedType(e.target.value);
+    console.log(selectedType)
+  };
  
+  // Обработчик изменения выбранного вектора
+  const handleVectorChange = (e) => {
+    setSelectedVector(e.target.value);
+    console.log(selectedVector)
+  };
 
   useEffect(() => {
       if (fetching) {
           console.log('fetching')
           axios.get(`${API_URL}:5000/api/post/list/all`) 
           .then(response => {
-              setPages([...pages, ...response.data])
-              console.log("респонс",response)
+              setIsLoaded(true);
+              setPages([...pages, ...response.data]);
+              console.log("респонс",response.data);
           })
           .finally( () => setFetching(false));
   }
 }, [fetching])
 
-  return(
-<div className={styles.container}>
-  {pages.map(page => 
-    <div key={page.id}>
-      <h1>{page.id}</h1>
+const filteredPages = pages.filter((item) => {
+  // if (selectedType === "all" && selectedVector === "all") {
+  //   // Если выбраны "all" для обоих атрибутов, не применяем фильтрацию
+  //   return true;
+  // } else if (selectedType === "all") {
+  //   switch (selectedVector) {
+  //     case "Sport":
+  //       return item.type === "Sport";
+  //     case "Scielce":
+  //       return item.type === "Scielce";
+  //     case "Nature":
+  //       return item.type === "Nature";
+  //     case "Religion":
+  //       return item.type === "Religion";
+  //     default:
+  //       return false;
+  //   }
+  // } else if (selectedVector === "all") {
+  //   switch (selectedType) {
+  //     case "all":
+  //       return true;
+  //     case "projects":
+  //       return item.type === "projects";
+  //     case "activities":
+  //       return item.type === "activities";
+  //     default:
+  //       return false;
+  //   }
+  // }
+  switch (selectedType) {
+        case "all":
+          return true;
+        case "projects":
+          return item.type === "projects";
+        case "activities":
+          return item.type === "activities";
+        default:
+          return false;
+      }
+});
 
+const filteredAllPages = filteredPages.filter((item) => {
+  switch (selectedVector) {
+        case "all":
+          return true;
+        case "Sport":
+          return item.vector === "Sport";
+        case "Science":
+          return item.vector === "Science";
+        case "Nature":
+          return item.vector === "Nature";
+        case "Religion":
+          return item.vector === "Religion";
+        default:
+          return false;
+      }
+});
+
+console.log('первое',filteredPages)
+console.log('да',filteredAllPages)
+
+if (isLoaded === false) {
+  <LoadingIcon/>
+}
+
+  return(
+<div className={styles.wrapper}>
+  <div>
+   
+     {/* Фильтр по типу */}
+     <label>
+          Тип
+          <select className={styles.filter_submit} value={selectedType} onChange={handleTypeChange}>
+            <option value="all">Все</option>
+            <option value="projects">Проект</option>
+            <option value="activities">Мероприятие</option>
+          </select>
+        </label>
+
+        <label>
+          Направление
+          <select className={styles.filter_submit} value={selectedVector} onChange={handleVectorChange}>
+            <option value="all">Все</option>
+            <option value="Sport">Спорт</option>
+            <option value="Science">Наука</option>
+            <option value="Nature">IT</option>
+            <option value="Religion">Религия</option>
+          </select>
+        </label>
+
+  </div>
+  <div className={styles.container}>
+  {filteredAllPages.map(page => 
+    <div key={page.id} className={styles.page}>     
+      <div className={styles.page_container}>
+
+      <img src={page.imageURL} alt="photo" className={styles.page_image}/>
+      <p className={styles.page_name}>{page.postName}</p>
+  
+      <p className={styles[`page_author-name`]}>Автор: {page.authorName}</p>
+      <p className={styles[`page_posting-time`]}>Дата публикации: {page.postingTime}</p>
+      
+
+      </div>
     </div>
     )}
+  </div>
 </div> 
   );
 }

@@ -39,27 +39,7 @@ import API_URL from "../../api.config";
     e.preventDefault();
     const currentTime = new Date();
     const postingTime = currentTime.toLocaleDateString().slice(0);
-    // const formData = new FormData();
-    //     formData.append("image", selectedImg);
-    //     console.log("содержимое изображения", formData.get("image"))
-    
-    
-
-    // const requestData = {
-    //   postName,
-    //   postingTime,
-    //   authorName: username,
-    //   authorId: userId,
-    //   selectedVector,
-    //   typeOf: "projects",
-    // formData,
-    //   content: {
-    //     description,
-    //     // mediaContent: {
-    //     //     selectedFile: formData,
-    //     // }
-    //   }
-    // };   
+  
     const content = {
       description: description,
     };
@@ -109,10 +89,10 @@ formData.append('content', JSON.stringify(content));
           Направление:
           <select className={styles.form_submit} value={selectedVector} onChange={handleVectorChange}>
             <option value="">Обязательно</option>
-            <option value="Science">Science</option>
-            <option value="Sport">Sport</option>
-            <option value="Nature">Nature</option>
-            <option value="Religion">Religion</option>
+            <option value="Science">Наука</option>
+            <option value="Sport">Спорт</option>
+            <option value="Nature">IT</option>
+            <option value="Religion">Религия</option>
           </select>
         </label>
         <br />

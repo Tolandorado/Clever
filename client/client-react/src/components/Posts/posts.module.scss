@@ -1,14 +1,69 @@
-.container {
+.wrapper {
     display:flex;
     align-items: center;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
     justify-content: center;
+    flex-direction: column;
     width: 100%;
 }
 
+.container {
+    display:flex;
+    align-items: center;
+    // flex-wrap: wrap;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.filter_submit {
+    padding:0.5rem 1.2rem 0.5rem 1.5rem;
+    margin: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #16af62;
+    text-decoration: none;
+    border-radius: 10px;
+    border: none;
+    transition: 0.4s;
+    &:hover {
+        background-color: #068043;
+        transition: 0.4s;
+    }
+}
+
 .page {
-    width: 300px;
-    height: 500px;
-    margin-bottom: 20px;
-    background-color: black;
+    width: 15vw;    
+    margin-bottom: 35px;
+    margin: 20px;
+    padding: 15px;
+    background-color: rgb(27, 49, 39);
+    position:relative;
+    border-radius: 15px;
+
+    &_image {
+        width: 15vw;
+        object-fit: cover;
+        height: 150px;
+        padding-bottom: 5px;
+        border-radius: 15px;
+    }
+
+    &_meta {
+        display: flex;
+    }
+
+    &_name {
+        font-size: 1.5vw;
+        white-space: nowrap; /* Запрет переноса текста на новую строку */
+        text-overflow: ellipsis; /* Обрезка текста с многоточием */
+        overflow: hidden;
+    }
+    &_author-name {
+        font-size: 0.8vw;
+        margin-right: 0.5vw;
+    }
+    &_posting-time {
+        font-size: 0.8vw;
+    }
 }
