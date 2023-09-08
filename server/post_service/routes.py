@@ -202,16 +202,12 @@ def api_get_list_of_all_posts():
         print(ex)
         return failure("Вот прям совсем никак не обрабатывается")
 
-@app.route("/api/post/get", methods=["GET",])
-def api_get_post():
+@app.route("/api/post/get/<string:postId>", methods=["GET",])
+def api_get_post_only_URL(postId):
     try:
-        try:
-            # Получаем аргументы (опять)
-            type = request.json.get("typeOf")
-            id = request.json.get("postId")
-        except Exception as ex:
-            print(ex)
-            return failure("Не получается прочесть аргументы")
+        type = ''
+        if postId.startswith('a'): type = "activities"
+        elif postId.startswith('p'): type = "projects"
 
         # Получение информации о посте и проверка на существование
         table = get_table_by_type(type)
