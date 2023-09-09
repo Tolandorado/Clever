@@ -83,11 +83,11 @@ formData.append('content', JSON.stringify(content));
       <label>
       Направление:
         <select className={styles.form_submit} value={selectedVector} onChange={handleVectorChange}>
-          <option value="">Обязательно</option>
-          <option value="Science">Science</option>
-          <option value="Sport">Sport</option>
-          <option value="Nature">Nature</option>
-          <option value="Religion">Religion</option>
+        <option value="">Обязательно</option>
+            <option value="Science">Наука</option>
+            <option value="Sport">Спорт</option>
+            <option value="Nature">IT</option>
+            <option value="Religion">Математика</option>
         </select>
       </label>
       <br />

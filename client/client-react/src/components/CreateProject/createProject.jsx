@@ -92,7 +92,7 @@ formData.append('content', JSON.stringify(content));
             <option value="Science">Наука</option>
             <option value="Sport">Спорт</option>
             <option value="Nature">IT</option>
-            <option value="Religion">Религия</option>
+            <option value="Religion">Математика</option>
           </select>
         </label>
         <br />

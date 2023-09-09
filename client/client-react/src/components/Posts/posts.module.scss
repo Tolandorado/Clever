@@ -1,8 +1,7 @@
 .wrapper {
     display:flex;
     align-items: center;
-    // flex-wrap: wrap;
-    justify-content: center;
+    
     flex-direction: column;
     width: 100%;
 }
@@ -10,15 +9,17 @@
 .container {
     display:flex;
     align-items: center;
-    // flex-wrap: wrap;
     justify-content: center;
     flex-wrap: wrap;
     width: 100%;
-    margin-top: 40px;
+    margin-top: 75px;
+    
+    // & .link:last-child {
+    //     margin-right: auto;
+    // }
 }
 
 .filter {
-
     position: fixed;
     top: 0;
 
@@ -41,9 +42,7 @@
 
 
 .page {
-    width: 15vw;    
-    margin-bottom: 35px;
-    margin: 20px;
+    width: 15vw;      
     padding: 15px;
     background-color: rgb(27, 49, 39);
     position:relative;
@@ -73,5 +72,18 @@
     }
     &_posting-time {
         font-size: 0.8vw;
+    }
+}
+
+.link {
+    display: inline-block;
+    margin: 20px;
+    margin-bottom: 35px;
+    transition: transform 0.3s ease;
+    border-radius: 15px;
+
+    &:hover {
+         transform: scale(1.1);
+         background-color: rgb(33, 59, 48);
     }
 }

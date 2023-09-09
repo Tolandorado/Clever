@@ -56,21 +56,13 @@ const filteredAllPages = filteredPages.filter((item) => {
   switch (selectedVector) {
         case "all":
           return true;
-        case "Sport":
-          return item.vector === "Sport";
-        case "Science":
-          return item.vector === "Science";
-        case "Nature":
-          return item.vector === "Nature";
-        case "Religion":
-          return item.vector === "Religion";
+        case selectedVector:
+          return item.vector === selectedVector;
         default:
           return false;
       }
 });
 
-console.log('первое',filteredPages)
-console.log('да',filteredAllPages)
 
 if (isLoaded === false) {
   <LoadingIcon/>
@@ -79,8 +71,6 @@ if (isLoaded === false) {
   return(
 <div className={styles.wrapper}>
   <div className={styles.filter}>
-   
-     {/* Фильтр по типу */}
      <label>
           Тип
           <select className={styles.filter_submit} value={selectedType} onChange={handleTypeChange}>
@@ -94,17 +84,16 @@ if (isLoaded === false) {
           Направление
           <select className={styles.filter_submit} value={selectedVector} onChange={handleVectorChange}>
             <option value="all">Все</option>
-            <option value="Sport">Спорт</option>
             <option value="Science">Наука</option>
+            <option value="Sport">Спорт</option>
             <option value="Nature">IT</option>
-            <option value="Religion">Религия</option>
+            <option value="Religion">Математика</option>
           </select>
         </label>
-
   </div>
   <div className={styles.container}>
   {filteredAllPages.map(page => 
-    <NavLink to={`/post/${page.id}`} key={page.id}>
+    <NavLink to={`/post/${page.id}`} key={page.id} className={styles.link}>
       <div key={page.id} className={styles.page}>     
       <div className={styles.page_container}>
 

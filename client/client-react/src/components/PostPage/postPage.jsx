@@ -26,7 +26,7 @@ export const PostPage = () => {
     <>   
     <div className={styles.container} >
       {page && (
-        <div className={styles.content}>
+        <div className={`${styles.content} ${styles[`scale-in`]}`}>
             <h1 className={styles.title}>{page.postName}</h1>
             <div  className={styles[`page-meta`]}>
                 <p className={styles[`author-name`]}>Опубликовал: {page.authorName}</p>

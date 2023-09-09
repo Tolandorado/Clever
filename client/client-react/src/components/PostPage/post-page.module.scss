@@ -3,6 +3,8 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    background-color: #0c1611;
+    box-shadow: 0 2px 8px rgb(0, 110, 81);
 }
 
 .title {
@@ -30,7 +32,6 @@
     padding:0 2vw 0 2vw;
     width: 50vw;
     height: 100%;
-    background-color: #0c1611;
     flex-direction: column;
 }
 
@@ -46,4 +47,17 @@
         align-items: center;
         justify-content: center;
     }
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0.97);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-in-out;
 }
