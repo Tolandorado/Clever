@@ -13,15 +13,16 @@ def failure(message = None):
         "message": message,
     })
 
-def success(data = None, *, x_total_count=False):
+def success(data = None, *, x_total_count=-1, no_resp_suc=False):
     _data = jsonify({
         "response-suc": True,
         "data": data,
-    })
+    }) if not no_resp_suc else jsonify(
+        data
+    )
 
-    if x_total_count:
-        _data.headers["X-Total-Count"] = len(data)
-
+    if x_total_count != -1:
+        _data.headers.add("x-total-count", x_total_count)
     return _data
 
 @app.route("/api/test", methods=["POST",])
@@ -49,22 +50,36 @@ def api_test():
 def api_create_post():
     try:
         try:
-            pprint(request.get_json())
-            image = request.files['image']
-            print("\033[31m",image,"\033[0m")
-
             # Получаем аргументы из запроса
-            post_name = request.json.get("postName")
-            posting_time = request.json.get("postingTime")
-            author_name = request.json.get("authorName")
-            author_id = request.json.get("authorId")
-            vector = request.json.get("selectedVector")
-            type = request.json.get("typeOf")
-            content = request.json.get("content")
+            post_name = request.form.get("postName", None)
+            posting_time = request.form.get("postingTime", None)
+            author_name = request.form.get("authorName", None)
+            author_id = request.form.get("authorId", None)
+            vector = request.form.get("selectedVector", None)
+            type = request.form.get("typeOf", None)
+            content = request.form.get("content", None)
+
+            form = [post_name, posting_time, author_id, author_name, vector, content]
+            if None in form:
+                print(form)
+                return failure("Не все поля присутствуют")
+            print(form)
+
         except Exception as ex:
             print(ex)
             return failure(f"Не удалось прочитать данные в запросе ({request.json})")
 
+        """
+        # Получаем изображение
+        try:
+            image = request.files.get("image")
+            if not image:
+                return failure("Изображение пусто")
+        except Exception as ex:
+            print(ex)
+            return failure("Не удалось получить изображение")
+        """
+            
         # Проверяем/получаем нужную таблицу
         table = get_table_by_type(type)
         if table is None:
@@ -99,11 +114,13 @@ def api_create_post():
             db.session.rollback()
             return failure("Не получилось сохранить контент поста")
 
+        """
         if image:
             image.save(f"{type}/{post.id}_preview_image.jpg")
         else:
             print("Нет изображения")
-
+        """
+            
         # Подтверждаем изменения в базе данных
         db.session.commit()
         return success()
@@ -118,14 +135,20 @@ def api_get_list_of_posts_random_limited(limit, page):
             return failure("Лимит постов должен быть больше нуля")
         if page < 0:
             return failure("Номер страницы не может быть меньше нуля")
+        page -= 1
 
         response = []
         posts = session.get('random_posts_list', [])
         if not posts:  # Проверка на пустой список
+            _posts = []
             for table in ALLOWED_TYPES.values():
-                posts += db.session.query(table).all()
+                _posts += db.session.query(table).all()
+            while len(_posts) != 0:
+                index = random.randint(0, len(_posts)-1)
+                posts.append(_posts.pop(index))
 
-        if page >= len(posts) // limit:
+
+        if page >= len(posts) / limit:
             return failure("Такой страницы не существует")
 
         page_start = page * limit
@@ -142,12 +165,13 @@ def api_get_list_of_posts_random_limited(limit, page):
                 "vector": post.vector,
                 "type": post.type,
                 "id": post.id,
-                "selectedFile": get_image(post.type, post.id),
+
             })
 
-        return success(response, x_total_count=True)
-    except Exception as e:
-        return failure(str(e))
+        return success(response, x_total_count=len(posts), no_resp_suc=True)
+    except Exception as ex:
+        print(ex)
+        return failure(str(ex))
 
 @app.route("/api/post/list/<int:limit>", methods=["GET",])
 def api_get_list_of_posts_limited(limit):
