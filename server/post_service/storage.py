@@ -10,7 +10,9 @@ def write_post(type: str, id: int, content: dict):
 def read_post(type: str, id: int):
     content = None
     with open(f"{type}/{id}.json", "r") as content_file:
-        content = json.loads(content_file.read())
+        _content = content_file.read()
+        content = json.loads(_content)
+        print(_content, content)
     return content
 
 def delete_post(type: str, id: int):
@@ -20,4 +22,4 @@ def get_image(type: str, id: int):
     content = None
     with open(f"{type}/{id}.json", "r") as content_file:
         content = json.loads(content_file.read())
-    return content["mediaContent"]["selectedFile"]
+    return content

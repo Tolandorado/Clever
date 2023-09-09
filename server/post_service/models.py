@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_session import Session
@@ -13,6 +13,7 @@ app.config["SECRET_KEY"] = "awaf11uhuieiudnuiqdh"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+BASE_URL = "http://192.168.1.132:5000/api"
 
 @app.after_request
 def after_request(response):
@@ -25,6 +26,7 @@ class BasePost(db.Model):
     __abstract__ = True
 
     id = db.Column(db.Integer, primary_key=True)
+    postId = db.Column(db.String(50), unique=True)
     postName = db.Column(db.String(200), nullable=False)
     postingTime = db.Column(db.String(20), nullable=False)
     authorName = db.Column(db.String(200), nullable=False)
