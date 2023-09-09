@@ -202,12 +202,12 @@ def api_get_list_of_all_posts():
         print(ex)
         return failure("Вот прям совсем никак не обрабатывается")
 
-@app.route("/api/post/get/<string:postId>", methods=["GET",])
-def api_get_post_only_URL(postId):
+@app.route("/api/post/get/<string:id>", methods=["GET",])
+def api_get_post_only_URL(id):
     try:
         type = ''
-        if postId.startswith('a'): type = "activities"
-        elif postId.startswith('p'): type = "projects"
+        if id.startswith('a'): type = "activities"
+        elif id.startswith('p'): type = "projects"
 
         # Получение информации о посте и проверка на существование
         table = get_table_by_type(type)
@@ -215,7 +215,7 @@ def api_get_post_only_URL(postId):
             return failure(f"Типа {type} не существует")
         
         try:
-            post = db.session.query(table).filter_by(postId=int(id)).one()
+            post = db.session.query(table).filter_by(postId=id).one()
         except Exception as ex:
             print(ex)
             return failure(f"Запись с id {id} не найдена")
@@ -239,7 +239,7 @@ def api_get_post_only_URL(postId):
             print(ex)
             return failure("Не вышло прочесть содержимое поста")
         
-        response["content"] = content
+        response["description"] = content["description"]
         return success(response)
 
     except Exception as ex:
